@@ -21,20 +21,23 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 //좋아요 버튼
-var likeCountElement = document.getElementById('like-count');
+var likeCountElements = document.querySelectorAll('.like-count');
 
-likeCountElement.addEventListener('click', function() {
-    
-    var likeText = likeCountElement.textContent;
-    var currentCount = parseInt(likeText.match(/\d+/)[0]); 
+likeCountElements.forEach(function(likeCountElement) {
+    likeCountElement.addEventListener('click', function() {
+       
+        var likeText = likeCountElement.textContent;
+        var currentCount = parseInt(likeText.match(/\d+/)[0]);  
 
-   
-    if (likeCountElement.classList.contains('liked')) {
-        currentCount--; 
-        likeCountElement.classList.remove('liked');
-    } else {
-        currentCount++;  
-        likeCountElement.classList.add('liked');
-    }
-    likeCountElement.textContent = `❤️ ${currentCount} likes`;
+        
+        if (likeCountElement.classList.contains('liked')) {
+            currentCount--;  
+            likeCountElement.classList.remove('liked');
+        } else {
+            currentCount++;  
+            likeCountElement.classList.add('liked');
+        }
+
+        likeCountElement.textContent = `${currentCount} likes`;
+    });
 });

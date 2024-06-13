@@ -150,6 +150,14 @@ body {
 
 .like-count {
     cursor: pointer;
+    transition: color 0.3s;
 }
-
+.like-count.liked::before{
+    content: "❤️";
+    margin-right: 5px;
+}
+.like-count::before {
+    content: "🤍";  
+    margin-right: 5px;  
+}
 
