@@ -2,20 +2,39 @@
 document.addEventListener('DOMContentLoaded', function() {
     var backToTopButton = document.getElementById('back-to-top');
 
-    // 스크롤 이벤트 리스너 추가
+    
     window.addEventListener('scroll', function() {
-        if (window.scrollY > 200) {  // 스크롤이 300px 이상일 때 버튼 표시
+        if (window.scrollY > 200) {
             backToTopButton.classList.add('show');
         } else {
             backToTopButton.classList.remove('show');
         }
     });
 
-    // 버튼 클릭 시 페이지의 맨 위로 스크롤
+    
     backToTopButton.addEventListener('click', function() {
         window.scrollTo({
             top: 0,
-            behavior: 'smooth'  // 부드럽게 스크롤
+            behavior: 'smooth'  
         });
     });
+});
+
+//좋아요 버튼
+var likeCountElement = document.getElementById('like-count');
+
+likeCountElement.addEventListener('click', function() {
+    
+    var likeText = likeCountElement.textContent;
+    var currentCount = parseInt(likeText.match(/\d+/)[0]); 
+
+   
+    if (likeCountElement.classList.contains('liked')) {
+        currentCount--; 
+        likeCountElement.classList.remove('liked');
+    } else {
+        currentCount++;  
+        likeCountElement.classList.add('liked');
+    }
+    likeCountElement.textContent = `❤️ ${currentCount} likes`;
 });

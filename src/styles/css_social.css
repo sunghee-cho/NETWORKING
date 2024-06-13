@@ -147,3 +147,9 @@ body {
 .back-to-top:hover {
     background-color: grey; 
 }
+
+.like-count {
+    cursor: pointer;
+}
+
+
