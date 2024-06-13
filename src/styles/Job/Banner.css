@@ -1,0 +1,48 @@
+.banner-container {
+    width: 990px;
+    height: 250px;
+    overflow: hidden;
+    position: relative;
+    background-color: #e0e0e0;
+    margin-bottom: 20px;
+    border-radius: 20px;
+  }
+  
+  .banner-slide {
+    display: none;
+    width: 100%;
+    height: 100%;
+    transition: opacity 1.2s ease-in-out;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  
+  .banner-slide.active {
+    display: block;
+    opacity: 1;
+  }
+  
+  .banner-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .banner-controls {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-50%);
+  }
+  
+  .banner-controls button {
+    background-color: #ababab;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    margin: 10px;
+  }
