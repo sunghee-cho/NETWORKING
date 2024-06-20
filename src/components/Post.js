@@ -1,54 +1,101 @@
 import React, { useState } from 'react';
+import '../styles/post.css';
 import postImage from '../assets/images/피드 메이지 예시.png';
 import postprofileImage from '../assets/images/고양이 프로필.png';
 
 const Post = () => {
-        //댓글 수
-        const [comments, setComments] = useState(0); //처음
-        const [likes, setLikes] = useState(5); //처음
-        const [commentText, setCommentText] = useState(''); 
-        const [commentList, setCommentList] = useState([]); 
-    
-      
-        const handleCommentChange = (event) => {
-            setCommentText(event.target.value);
-        };
-    
-        
-        const handleCommentSubmit = () => {
-            if (commentText.trim() !== '') {
-                setCommentList([...commentList, commentText]); 
-                setCommentText(''); 
-                setComments(comments + 1); 
-            }
-        };
-    
-        return (
-            <div className="post">
-                <img src={postImage} alt="Post Image" className="main-img" />
-                <div className="description">들어갈 내용</div>
-                <div className="meta">
-                    <span>💬 {comments} comments</span>
-                    <span className="like-count">{likes} likes</span>
+    const [posts, setPosts] = useState([
+        { id: 1, content: '테스트용 포스트.', comments: [], likes: 5 }
+    ]);
+    const [newPostContent, setNewPostContent] = useState('');
+    const [showPopup, setShowPopup] = useState(false);
+    const [commentText, setCommentText] = useState('');
+
+    const handleAddPost = () => {
+        if (newPostContent.trim() !== '') {
+            const newPost = {
+                id: posts.length + 1,
+                content: newPostContent,
+                comments: [],
+                likes: 0
+            };
+            setPosts([newPost, ...posts]);
+            setNewPostContent('');
+            setShowPopup(false);
+        }
+    };
+
+    const togglePopup = () => {
+        setShowPopup(!showPopup);
+    };
+
+    const handleCommentChange = (event) => {
+        setCommentText(event.target.value);
+    };
+
+    const handleCommentSubmit = (postId) => {
+        if (commentText.trim() !== '') {
+            setPosts(posts.map(post => 
+                post.id === postId 
+                    ? { ...post, comments: [...post.comments, commentText] } 
+                    : post
+            ));
+            setCommentText('');
+        }
+    };
+
+    return (
+        <div className="post-container">
+            <button onClick={togglePopup} className="add-post-button">새 포스트 작성</button>
+
+            {showPopup && (
+                <div className="popup-overlay">
+                    <div className="new-post-popup">
+                        <div className="popup-content">
+                            <div className="popup-header">
+                                <span>새 포스트 작성</span>
+                                <button onClick={togglePopup} className="close-popup-button">✕</button>
+                            </div>
+                            <textarea
+                                placeholder="나누고 싶은 생각이 있으세요?"
+                                value={newPostContent}
+                                onChange={(e) => setNewPostContent(e.target.value)}
+                                className="new-post-textarea"
+                            />
+                            <button onClick={handleAddPost} className="popup-add-post-button">업데이트</button>
+                        </div>
+                    </div>
                 </div>
-                <div className="comments">
-                    {commentList.map((comment, index) => (
-                        <div key={index} className="comment">{comment}</div>
-                    ))}
+            )}
+
+            {posts.map(post => (
+                <div key={post.id} className="post">
+                    <img src={postImage} alt="Post Image" className="main-img" />
+                    <div className="description">{post.content}</div>
+                    <div className="meta">
+                        <span>💬 {post.comments.length} comments</span>
+                        <span className="like-count">{post.likes} likes</span>
+                    </div>
+                    <div className="comments">
+                        {post.comments.map((comment, index) => (
+                            <div key={index} className="comment">{comment}</div>
+                        ))}
+                    </div>
+                    <div className="comment-input">
+                        <img src={postprofileImage} alt="User Profile" className="profile-pic" />
+                        <input
+                            type="text"
+                            placeholder="댓글을 입력하세요..."
+                            className="comment-textbox"
+                            value={commentText}
+                            onChange={handleCommentChange}
+                        />
+                        <button className="comment-button" onClick={() => handleCommentSubmit(post.id)}>Post</button>
+                    </div>
                 </div>
-                <div className="comment-input">
-                    <img src={postprofileImage} alt="User Profile" className="profile-pic" />
-                    <input
-                        type="text"
-                        placeholder="댓글을 입력하세요..."
-                        className="comment-textbox"
-                        value={commentText}
-                        onChange={handleCommentChange}
-                    />
-                    <button className="comment-button" onClick={handleCommentSubmit}>Post</button>
-                </div>
-            </div>
-        );
+            ))}
+        </div>
+    );
 };
 
 export default Post;
