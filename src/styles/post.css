@@ -1,6 +1,42 @@
+.post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+}
+
+.profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.username {
+    font-weight: bold;
+}
+
+.delete-button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #999;
+}
+
+.delete-button:hover {
+    color: #333;
+}
+
 .add-post-button {
     width: 100%;
-    background-color: #a1acb3;
+    background-color: #000000;
     border: none;
     color: white;
     font-weight: 400;

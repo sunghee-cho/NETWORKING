@@ -3,9 +3,21 @@ import '../styles/post.css';
 import postImage from '../assets/images/피드 메이지 예시.png';
 import postprofileImage from '../assets/images/고양이 프로필.png';
 
+const PostHeader = ({ username, onDelete }) => {
+    return (
+        <div className="post-header">
+            <div className="user-info">
+                <img src={postprofileImage} alt="Profile Picture" className="profile-pic" />
+                <div className="username">{username}</div>
+            </div>
+            <button className="delete-button" onClick={onDelete}>×</button>
+        </div>
+    );
+};
+
 const Post = () => {
     const [posts, setPosts] = useState([
-        { id: 1, content: '테스트용 포스트.', comments: [], likes: 5 }
+        { id: 1, username: '사용자 이름', content: '테스트용 포스트.', comments: [], likes: 5 }
     ]);
     const [newPostContent, setNewPostContent] = useState('');
     const [showPopup, setShowPopup] = useState(false);
@@ -15,6 +27,7 @@ const Post = () => {
         if (newPostContent.trim() !== '') {
             const newPost = {
                 id: posts.length + 1,
+                username: '사용자 이름',
                 content: newPostContent,
                 comments: [],
                 likes: 0
@@ -23,6 +36,10 @@ const Post = () => {
             setNewPostContent('');
             setShowPopup(false);
         }
+    };
+
+    const handleDeletePost = (postId) => {
+        setPosts(posts.filter(post => post.id !== postId));
     };
 
     const togglePopup = () => {
@@ -70,6 +87,7 @@ const Post = () => {
 
             {posts.map(post => (
                 <div key={post.id} className="post">
+                    <PostHeader username={post.username} onDelete={() => handleDeletePost(post.id)} />
                     <img src={postImage} alt="Post Image" className="main-img" />
                     <div className="description">{post.content}</div>
                     <div className="meta">
