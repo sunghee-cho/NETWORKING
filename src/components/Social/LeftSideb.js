@@ -1,5 +1,5 @@
 import React from 'react';
-import profileImage from '../assets/images/고양이 프로필.png';
+import profileImage from '../../assets/images/고양이 프로필.png';
 
 const LeftSideb = () => {
     return (

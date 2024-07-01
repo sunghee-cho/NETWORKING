@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import '../styles/Socialcss/post.css';
-import postImage from '../assets/images/피드 메이지 예시.png';
-import postprofileImage from '../assets/images/고양이 프로필.png';
+import '../../styles/Socialcss/post.css';
+import postImage from '../../assets/images/피드 메이지 예시.png';
+import postprofileImage from '../../assets/images/고양이 프로필.png';
 
 const PostHeader = ({ username, onDelete }) => {
     return (
@@ -17,11 +17,10 @@ const PostHeader = ({ username, onDelete }) => {
 
 const Post = () => {
     const [posts, setPosts] = useState([
-        { id: 1, username: '사용자 이름', content: '테스트용 포스트.', comments: [], likes: 5 }
+        { id: 1, username: '사용자 이름', content: '테스트용 포스트.', comments: [], likes: 5, commentText: '' }
     ]);
     const [newPostContent, setNewPostContent] = useState('');
     const [showPopup, setShowPopup] = useState(false);
-    const [commentText, setCommentText] = useState('');
 
     const handleAddPost = () => {
         if (newPostContent.trim() !== '') {
@@ -30,7 +29,8 @@ const Post = () => {
                 username: '사용자 이름',
                 content: newPostContent,
                 comments: [],
-                likes: 0
+                likes: 0,
+                commentText: ''
             };
             setPosts([newPost, ...posts]);
             setNewPostContent('');
@@ -46,19 +46,27 @@ const Post = () => {
         setShowPopup(!showPopup);
     };
 
-    const handleCommentChange = (event) => {
-        setCommentText(event.target.value);
+    const handleCommentChange = (postId, event) => {
+        const updatedPosts = posts.map(post => 
+            post.id === postId 
+                ? { ...post, commentText: event.target.value }
+                : post
+        );
+        setPosts(updatedPosts);
     };
 
     const handleCommentSubmit = (postId) => {
-        if (commentText.trim() !== '') {
-            setPosts(posts.map(post => 
-                post.id === postId 
-                    ? { ...post, comments: [...post.comments, commentText] } 
-                    : post
-            ));
-            setCommentText('');
-        }
+        const updatedPosts = posts.map(post => {
+            if (post.id === postId && post.commentText.trim() !== '') {
+                return { 
+                    ...post, 
+                    comments: [...post.comments, post.commentText],
+                    commentText: '' 
+                };
+            }
+            return post;
+        });
+        setPosts(updatedPosts);
     };
 
     return (
@@ -105,8 +113,8 @@ const Post = () => {
                             type="text"
                             placeholder="댓글을 입력하세요..."
                             className="comment-textbox"
-                            value={commentText}
-                            onChange={handleCommentChange}
+                            value={post.commentText}
+                            onChange={(e) => handleCommentChange(post.id, e)}
                         />
                         <button className="comment-button" onClick={() => handleCommentSubmit(post.id)}>Post</button>
                     </div>
