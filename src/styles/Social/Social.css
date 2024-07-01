@@ -67,7 +67,7 @@ body {
     text-align: center;
   }
   
-  .profile {
+  .profilefeed {
     text-align: center;
     display: flex;
     flex-direction: column;
@@ -75,16 +75,16 @@ body {
     gap: 15px;
   }
   
-  .profile img {
+  .profilefeed img {
     border-radius: 50%;
     width: 120px;
     height: 120px;
   }
   
-  .profile p {
+  .profilefeed p {
     margin: 10px 0;
   }
-  .profile .button {
+  .profilefeed .button {
     background-color: black;
     color: white;
     font-size: 16px;
