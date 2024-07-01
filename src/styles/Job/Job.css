@@ -1,0 +1,156 @@
+/* Job.css */
+.filters {
+    display: flex;
+    align-items: center; /* 세로 중앙 정렬 */
+    gap: 20px;
+    width: 980px;
+  }
+  
+  .filterdiv {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 20px;
+  }
+  
+  .filter-container {
+    position: relative;
+  }
+  
+  .filter-header {
+    display: flex;
+    align-items: center;
+  }
+  
+  .filterButton {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 7px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+  
+  .filterButton .selectedCount {
+    color: #ff5722;
+    margin-left: 5px;
+    font-weight: bold;
+  }
+  
+  .filterButton .arrow {
+    margin-left: 8px;
+    border: solid black;
+    border-width: 0 2px 2px 0;
+    display: inline-block;
+    padding: 3px;
+    transition: transform 0.2s ease;
+  }
+  
+  .filterButton .arrow.down {
+    transform: rotate(45deg);
+  }
+  
+  .filterButton .arrow.up {
+    transform: rotate(-135deg);
+  }
+  
+  .filter-options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 10;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 7px;
+    margin-top: 10px;
+    padding: 10px;
+    width: 200px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .filter-option {
+    margin-bottom: 10px;
+  }
+  
+  .filter-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+  
+  .resetButton,
+  .applyButton {
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+  
+  .searchdiv {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-left: auto;
+  }
+  
+  .searchInput {
+    padding: 10px;
+    border: 1px solid #ccc;
+    width: 250px;
+  }
+  
+  .searchButton {
+    padding: 10px 20px;
+    cursor: pointer;
+  }
+  
+  .joblist {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 25px;
+  }
+  
+  .jobItem {
+    flex: 0 0 calc(33.333% - 20px); /* 항목의 크기가 변하지 않도록 설정 */
+    box-sizing: border-box;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+  }
+  
+  .jobItem:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .jobTitle {
+    font-size: 1.25em;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .companyName {
+    font-size: 1.1em;
+    color: #777;
+    margin-bottom: 10px;
+  }
+  
+  .jobDetails p {
+    margin: 5px 0;
+    font-size: 0.875em;
+    color: #555;
+    display: flex;
+    align-items: center;
+  }
+  
+  .jobDetails i {
+    margin-right: 5px;
+    color: #888;
+  }
+  
+  /* Font Awesome */
+  @import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css");

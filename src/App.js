@@ -1,14 +1,28 @@
-import React from 'react';
-import Header from './components/Header';
-import Container from './components/Social/Container';
+import "./App.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Footer from "./components/Footer";
+import Header from "./components/Header";
+import Chat from "./pages/Chat";
+import Social from "./pages/Social";
+import Notifications from "./pages/Notification";
+import Joblist from "./pages/Joblist";
 
-const App = () => {
-    return (
-        <div>
-            <Header />
-            <Container />
-        </div>
-    );
-};
+function App() {
+  return (
+    <div className="App">
+      <BrowserRouter>
+        <Header />
+        <Routes>
+          <Route path="/" element={<Social />} />
+          <Route path="/chat" element={<Chat />} />
+          <Route path="/joblist" element={<Joblist />} />
+          {/* <Route path="/member" element={<Member />} /> */}
+          <Route path="/notifications" element={<Notifications />} />
+        </Routes>
+        <Footer />
+      </BrowserRouter>
+    </div>
+  );
+}
 
 export default App;

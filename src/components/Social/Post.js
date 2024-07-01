@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../../styles/Socialcss/post.css';
+import '../../styles/Social/Post.css';
 import postImage from '../../assets/images/피드 메이지 예시.png';
 import postprofileImage from '../../assets/images/고양이 프로필.png';
 

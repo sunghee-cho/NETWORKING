@@ -1,0 +1,94 @@
+/* ============= noti =============*/
+.notifications-page {
+    display: flex;
+    padding: 30px;
+  }
+  
+  .notifications {
+    flex: 1;
+  }
+  
+  .notifications {
+    width: 70%;
+    margin-right: 30px;
+  }
+  
+  .notifications__tabs {
+    display: flex;
+  }
+  
+  .notifications__tabs button {
+    /* flex: 1; */
+    padding: 10px 70px;
+    border: none;
+    margin: 0px 5px;
+    border-radius: 10px;
+    background-color: #e5e5e5;
+    cursor: pointer;
+    font-size: 15px;
+  }
+  .notifications__tabs button:hover {
+    background-color: tomato;
+    color: white;
+  }
+  .notifications__tabs button.active {
+    background-color: tomato;
+    color: white;
+  }
+  
+  .notifications-list {
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid gray;
+    border-radius: 20px;
+    height: 80%;
+  }
+  
+  .notification {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    border-bottom: 1px solid #f1f1f1;
+  }
+  .notification:hover {
+    background-color: #e5e5e5;
+  }
+  .notification p {
+    margin: 0;
+  }
+  
+  .notification__job-view,
+  .more-options {
+    background: none;
+    border: none;
+    color: tomato;
+    cursor: pointer;
+  }
+  
+  /* =================  toggle btn ================ */
+  
+  .options-menu {
+    position: absolute;
+    top: 25px;
+    right: 0;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    margin-top: 10px;
+    z-index: 10;
+  }
+  
+  .options-menu button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+  }
+  
+  .options-menu button:hover {
+    background-color: #e5e5e5;
+  }
