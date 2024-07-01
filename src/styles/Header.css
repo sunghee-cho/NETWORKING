@@ -1,31 +1,31 @@
-.header__container {
+/* Header.css */
+.header {
   display: flex;
   justify-content: space-between;
-  margin: 2rem 3rem;
+  padding: 30px 40px;
 }
 
-.header__wrapper {
-  display: flex;
-  gap: 3rem;
-}
-
-.header__title {
-  font-size: 1.5rem;
-}
-
-span {
-  color: orange;
-}
-
-.header__sub-title {
+.logo {
+  font-size: 30px;
   font-weight: 600;
 }
 
-.header__button {
-  width: 6.188rem;
-  height: 3.25rem;
-  border-radius: 0.5rem;
-  background-color: black;
-  color: white;
-  font-size: 1rem;
+.logo span {
+  color: tomato;
+}
+
+nav a {
+  margin: 0 20px;
+  text-decoration: none;
+  color: black;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+nav a.active {
+  color: tomato;
+}
+
+nav a:hover {
+  color: tomato;
 }

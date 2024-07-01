@@ -1,9 +1,9 @@
-import ChatList from "../../components/Chat/ChatList";
+import ChatList from "../components/Chat/ChatList";
 // import React, { useState, useEffect } from "react";
 // import SockJS from "sockjs-client";
 // import { Client } from "@stomp/stompjs";
 // import axios from "axios";
-import "./Chat.css";
+import "../styles/Chat/Chat.css";
 
 const Chat = () => {
   // const [messages, setMessages] = useState([]);

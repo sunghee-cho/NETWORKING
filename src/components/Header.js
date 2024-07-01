@@ -1,21 +1,22 @@
+import React from "react";
 import "../styles/Header.css";
 
-export default function Header() {
+const Header = () => {
   return (
     <header className="header">
-      <div className="header__container">
-        <div className="header__wrapper">
-          <h1 className="header__title">
-            NET<span>WORKING</span>
-          </h1>
-        </div>
-        <div className="header__wrapper">
-          <p className="header__sub-title">Page</p>
-          <p className="header__sub-title">Page</p>
-          <p className="header__sub-title">Page</p>
-          <button className="header__button">Button</button>
-        </div>
+      <div className="logo">
+        NET<span>WORKING</span>
       </div>
+      <nav>
+        <a href="/">홈</a>
+        <a href="/joblist">채용 공고</a>
+        <a href="/chat">메시지</a>
+        <a href="/notifications" className="active">
+          알림
+        </a>
+      </nav>
     </header>
   );
-}
+};
+
+export default Header;

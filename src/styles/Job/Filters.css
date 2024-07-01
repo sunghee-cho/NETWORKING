@@ -1,0 +1,103 @@
+.filters {
+  display: flex;
+  align-items: center; /* 세로 중앙 정렬 */
+  gap: 20px;
+  width: 980px;
+}
+
+.filterdiv {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 20px;
+}
+
+.filter-container {
+  position: relative;
+}
+
+.filter-header {
+  display: flex;
+  align-items: center;
+}
+
+.filterButton {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 7px;
+  background-color: #f9f9f9;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.filterButton .selectedCount {
+  color: #ff5722;
+  margin-left: 5px;
+  font-weight: bold;
+}
+
+.filterButton .arrow {
+  margin-left: 8px;
+  border: solid black;
+  border-width: 0 2px 2px 0;
+  display: inline-block;
+  padding: 3px;
+  transition: transform 0.2s ease;
+}
+
+.filterButton .arrow.down {
+  transform: rotate(45deg);
+}
+
+.filterButton .arrow.up {
+  transform: rotate(-135deg);
+}
+
+.filter-options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 10;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 7px;
+  margin-top: 10px;
+  padding: 10px;
+  width: 200px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.filter-option {
+  margin-bottom: 10px;
+}
+
+.filter-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.resetButton,
+.applyButton {
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.searchdiv {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-left: auto;
+}
+
+.searchInput {
+  padding: 10px;
+  border: 1px solid #ccc;
+  width: 250px;
+}
+
+.searchButton {
+  padding: 10px 20px;
+  cursor: pointer;
+}

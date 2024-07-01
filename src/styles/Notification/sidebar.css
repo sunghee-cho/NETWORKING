@@ -1,0 +1,26 @@
+/* ================ side ================ */
+.sidebar {
+  border-left: 1px solid #ddd;
+  padding-left: 30px;
+}
+
+.company-info ul {
+  list-style: none;
+  padding: 0;
+}
+
+.company-info ul li {
+  margin-bottom: 10px;
+}
+
+.company-info ul li a {
+  text-decoration: none;
+  color: #333;
+}
+
+.social-links a {
+  display: block;
+  margin-top: 10px;
+  text-decoration: none;
+  color: tomato;
+}
