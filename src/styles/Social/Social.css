@@ -1,198 +1,198 @@
 body {
-  font-family: "Roboto", sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #ffffff;
-}
-
-/* 메인 콘텐츠 및 사이드바 컨테이너 */
-.container {
-  display: flex;
-  max-width: 1280px;
-  margin: 60px auto;
-  gap: 20px;
-}
-
-/* 메인 콘텐츠 */
-.main-content {
-  flex: 2;
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  /*box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);*/
-}
-
-/* 포스트 */
-.main-content .post {
-  padding-bottom: 20px;
-  margin-bottom: 20px;
-  border-bottom: 1px solid #ddd;
-}
-
-.main-content .post:last-child {
-  border-bottom: none;
-}
-
-.main-content .post main-img {
-  max-width: 100%;
-  border-radius: 8px;
-  width: 600px;
-  height: 400px;
-}
-
-.main-content .post .description {
-  margin: 10px 0;
-}
-
-.main-content .post .meta {
-  display: flex;
-  gap: 10px;
-}
-
-/* 사이드바 */
-.leftsidebar {
-  flex: 1;
-  background-color: #fff;
-  padding: 80px 20px;
-  border-radius: 8px;
-  box-shadow: 2px 0 0px rgba(0, 0, 0, 0.1);
-}
-
-.rightsidebar {
-  flex: 1.5;
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: -2px 0 0px rgba(0, 0, 0, 0.1);
-  text-align: center;
-}
-
-.profile {
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 15px;
-}
-
-.profile img {
-  border-radius: 50%;
-  width: 120px;
-  height: 120px;
-}
-
-.profile p {
-  margin: 10px 0;
-}
-.profile .button {
-  background-color: black;
-  color: white;
-  font-size: 16px;
-  padding: 5px 20px;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-}
-
-.links a {
-  display: block;
-  margin-bottom: 10px;
-  text-decoration: none;
-  color: #000;
-}
-
-/* 댓글창 */
-.comments {
-  margin-top: 10px;
-  margin-bottom: 10px;
-  padding: 10px 0;
-  border-top: 1px solid #e6e6e6;
-}
-.comment {
-  display: flex;
-  align-items: center;
-  margin-top: 5px;
-  padding: 5px 0;
-}
-.comment-input {
-  display: flex;
-  align-items: center;
-  border-top: 1px solid #e6e6e6;
-  padding-top: 10px;
-}
-
-.comment-input .profile-pic {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  margin-right: 10px;
-}
-
-.comment-input .comment-textbox {
-  flex-grow: 1;
-  border: none;
-  padding: 5px;
-  font-size: 14px;
-  outline: none;
-}
-
-.comment-input .comment-button {
-  background-color: #141516;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  margin-left: 10px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.comment-input .comment-button:disabled {
-  background-color: #b2dffc;
-  cursor: default;
-}
-
-/* 푸터 */
-.footer {
-  text-align: center;
-  padding: 20px;
-  background-color: #fff;
-  margin-top: 600px;
-}
-.back-to-top {
-  position: fixed;
-  bottom: 40px;
-  right: 80px;
-  background-color: rgb(0, 0, 0);
-  color: white;
-  font-weight: bold;
-  padding: 15px 20px;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-  transition: background-color 0.3s, opacity 0.3s;
-  opacity: 0;
-  visibility: hidden;
-}
-
-.back-to-top.show {
-  opacity: 1;
-  visibility: visible;
-}
-
-.back-to-top:hover {
-  background-color: grey;
-}
-
-.like-count {
-  cursor: pointer;
-  transition: color 0.3s;
-}
-.like-count.liked::before {
-  content: "❤️";
-  margin-right: 5px;
-}
-.like-count::before {
-  content: "🤍";
-  margin-right: 5px;
-}
+    font-family: "Roboto", sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #ffffff;
+  }
+  
+  /* 메인 콘텐츠 및 사이드바 컨테이너 */
+  .container {
+    display: flex;
+    max-width: 1280px;
+    margin: 60px auto;
+    gap: 20px;
+  }
+  
+  /* 메인 콘텐츠 */
+  .main-content {
+    flex: 2;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    /*box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);*/
+  }
+  
+  /* 포스트 */
+  .main-content .post {
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .main-content .post:last-child {
+    border-bottom: none;
+  }
+  
+  .main-content .post main-img {
+    max-width: 100%;
+    border-radius: 8px;
+    width: 600px;
+    height: 400px;
+  }
+  
+  .main-content .post .description {
+    margin: 10px 0;
+  }
+  
+  .main-content .post .meta {
+    display: flex;
+    gap: 10px;
+  }
+  
+  /* 사이드바 */
+  .leftsidebar {
+    flex: 1;
+    background-color: #fff;
+    padding: 80px 20px;
+    border-radius: 8px;
+    box-shadow: 2px 0 0px rgba(0, 0, 0, 0.1);
+  }
+  
+  .rightsidebar {
+    flex: 1.5;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: -2px 0 0px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  .profilefeed {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .profilefeed img {
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+  }
+  
+  .profilefeed p {
+    margin: 10px 0;
+  }
+  .profilefeed .button {
+    background-color: black;
+    color: white;
+    font-size: 16px;
+    padding: 5px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  
+  .links a {
+    display: block;
+    margin-bottom: 10px;
+    text-decoration: none;
+    color: #000;
+  }
+  
+  /* 댓글창 */
+  .comments {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 10px 0;
+    border-top: 1px solid #e6e6e6;
+  }
+  .comment {
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+    padding: 5px 0;
+  }
+  .comment-input {
+    display: flex;
+    align-items: center;
+    border-top: 1px solid #e6e6e6;
+    padding-top: 10px;
+  }
+  
+  .comment-input .profile-pic {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  
+  .comment-input .comment-textbox {
+    flex-grow: 1;
+    border: none;
+    padding: 5px;
+    font-size: 14px;
+    outline: none;
+  }
+  
+  .comment-input .comment-button {
+    background-color: #141516;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    margin-left: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .comment-input .comment-button:disabled {
+    background-color: #b2dffc;
+    cursor: default;
+  }
+  
+  /* 푸터 */
+  .footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #fff;
+    margin-top: 600px;
+  }
+  .back-to-top {
+    position: fixed;
+    bottom: 40px;
+    right: 80px;
+    background-color: rgb(0, 0, 0);
+    color: white;
+    font-weight: bold;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s, opacity 0.3s;
+    opacity: 0;
+    visibility: hidden;
+  }
+  
+  .back-to-top.show {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  .back-to-top:hover {
+    background-color: grey;
+  }
+  
+  .like-count {
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+  .like-count.liked::before {
+    content: "❤️";
+    margin-right: 5px;
+  }
+  .like-count::before {
+    content: "🤍";
+    margin-right: 5px;
+  }

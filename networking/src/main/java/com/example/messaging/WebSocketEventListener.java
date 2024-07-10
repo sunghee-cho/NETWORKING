@@ -22,7 +22,7 @@ public class WebSocketEventListener {
 
   @EventListener
   public void handleWebSocketConnectListener(SessionConnectedEvent event) {
-    logger.info("Received a new web socket connection");
+    logger.info("새로운 웹소켓 연결이 확인되었습니다.");
   }
 
   @EventListener
@@ -30,12 +30,15 @@ public class WebSocketEventListener {
     StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
     @SuppressWarnings("null")
     String username = (String) headerAccessor.getSessionAttributes().get("username");
-    if (username != null) {
-      logger.info("User Disconnected : " + username);
+    @SuppressWarnings("null")
+    String roomId = (String) headerAccessor.getSessionAttributes().get("roomId");
+    if (username != null && roomId != null ) {
+      logger.info("User Disconnected : {}" + username);
       ChatMessage chatMessage = new ChatMessage();
       chatMessage.setType(ChatMessage.MessageType.LEAVE);
       chatMessage.setSender(username);
-      messagingTemplate.convertAndSend("/topic/public", chatMessage);
+      chatMessage.setContent(username + "님이 나갔습니다.");
+      messagingTemplate.convertAndSend("/topic/groupChatRoom/" + roomId, chatMessage);
     }
   }
 }

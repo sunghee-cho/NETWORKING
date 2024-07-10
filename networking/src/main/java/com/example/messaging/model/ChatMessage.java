@@ -1,12 +1,17 @@
 package com.example.messaging.model;
 
+import java.sql.Timestamp;
+
 public class ChatMessage {
   private MessageType type;
   private String content;
   private String sender;
+  private String receiver;
+  private Timestamp timestamp;
 
   public enum MessageType {
-    CHAT,
+    GROUP_CHAT,
+    PRIVATE_CHAT,
     JOIN,
     LEAVE
   }
@@ -34,5 +39,22 @@ public class ChatMessage {
 
   public void setSender(String sender) {
     this.sender = sender;
+  }
+
+  public String getReceiver() {
+    return receiver;
+  }
+
+  public void setReceiver(String receiver) {
+    this.receiver = receiver;
+  }
+
+
+  public Timestamp getTimestamp() {
+    return timestamp;
+  }
+
+  public void setTimestamp(Timestamp timestamp) {
+    this.timestamp = timestamp;
   }
 }

@@ -10,6 +10,9 @@
 
 # production
 /build
+#os 및 ide 관련 파일
+.vscode/
+.DS_Store
 
 # misc
 .DS_Store
@@ -18,6 +21,16 @@
 .env.test.local
 .env.production.local
 .env
+
+#리액트 초기파일
+App.css
+App.js
+App.test.js
+index.css
+index.js
+logo.svg
+reportWebVitals.js
+setupTests.js
 
 npm-debug.log*
 yarn-debug.log*
