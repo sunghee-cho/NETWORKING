@@ -1,87 +1,80 @@
-import ChatList from "../components/Chat/ChatList";
-// import React, { useState, useEffect } from "react";
-// import SockJS from "sockjs-client";
-// import { Client } from "@stomp/stompjs";
-// import axios from "axios";
-import "../styles/Chat/Chat.css";
+import React, { useState, useEffect } from 'react';
+import SockJS from 'sockjs-client';
+import { Stomp } from '@stomp/stompjs';
 
 const Chat = () => {
-  // const [messages, setMessages] = useState([]);
-  // const [message, setMessage] = useState("");
-  // const [stompClient, setStompClient] = useState(null);
+  const [username, setUsername] = useState('');
+  const [roomId, setRoomId] = useState('');
+  const [message, setMessage] = useState('');
+  const [messages, setMessages] = useState([]);
+  const [stompClient, setStompClient] = useState(null);
 
-  // useEffect(() => {
-  //   axios.get("/csrf").then((response) => {
-  //     const csrfToken = response.data.token;
+  useEffect(() => {
+    if (stompClient) {
+      stompClient.connect({}, (frame) => {
+        console.log('Connected: ' + frame);
 
-  //     const authToken = "";
+        stompClient.subscribe(`/topic/groupChatRoom/${roomId}`, (message) => {
+          const newMessage = JSON.parse(message.body);
+          setMessages((prevMessages) => [...prevMessages, newMessage.content]);
+        });
 
-  //     const socket = new SockJS("/chat");
-  //     const client = new Client({
-  //       webSocketFactory: () => socket,
-  //       connectHeaders: {
-  //         "X-CSRF-TOKEN": csrfToken,
-  //         Authorization: `Bearer ${authToken}`,
-  //       },
-  //       onConnect: () => {
-  //         console.log("Connected");
+        stompClient.send(`/app/chat.addUser/${roomId}`, {}, JSON.stringify({ sender: username }));
+      });
+    }
+  }, [stompClient, roomId, username]);
 
-  //         client.subscribe("/topic/public", (msg) => {
-  //           const newMessage = JSON.parse(msg.body);
-  //           setMessages((prevMessages) => [...prevMessages, newMessage]);
-  //         });
-  //       },
-  //     });
+  const connect = () => {
+    const socket = new SockJS(process.env.REACT_APP_WEBSOCKET_URL);
+    const client = Stomp.over(socket);
+    setStompClient(client);
+  };
 
-  //     client.activate();
-  //     setStompClient(client);
-
-  //     return () => {
-  //       if (stompClient) {
-  //         stompClient.deactivate();
-  //       }
-  //     };
-  //   });
-  // }, []);
-
-  // const sendMessage = () => {
-  //   if (stompClient && message.trim()) {
-  //     const chatMessage = {
-  //       sender: "User",
-  //       content: message,
-  //       type: "CHAT",
-  //     };
-  //     stompClient.publish({
-  //       destination: "/app/chat.sendMessage",
-  //       body: JSON.stringify(chatMessage),
-  //     });
-  //     setMessage("");
-  //   }
-  // };
+  const sendMessage = () => {
+    if (stompClient && message.trim() !== '') {
+      const chatMessage = {
+        sender: username,
+        content: message,
+        type: 'CHAT'
+      };
+      stompClient.send(`/app/chat.sendMessage/${roomId}`, {}, JSON.stringify(chatMessage));
+      setMessage('');
+    }
+  };
 
   return (
     <div>
+      <h1>채팅 테스트</h1>
       <div>
-        <ChatList />
+        <input
+          type="text"
+          placeholder="이름 입력"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="방ID 입력"
+          value={roomId}
+          onChange={(e) => setRoomId(e.target.value)}
+        />
+        <button onClick={connect}>Join Chat</button>
       </div>
-      {/* <div className="chat-container">
-        <div className="message-input">
-          <input
-            type="text"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            placeholder="Enter your message..."
-          />
-          <button onClick={sendMessage}>Send</button>
-        </div>
-        <div className="message-list">
-          {messages.map((msg, index) => (
-            <div key={index} className="message">
-              <strong>{msg.sender}</strong>: {msg.content}
-            </div>
-          ))}
-        </div>
-      </div> */}
+      <div>
+        <input
+          type="text"
+          placeholder="메시지 입력"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+        />
+        <button onClick={sendMessage}>Send</button>
+      </div>
+      <div>
+        <h2>Messages:</h2>
+        {messages.map((msg, index) => (
+          <div key={index}>{msg}</div>
+        ))}
+      </div>
     </div>
   );
 };

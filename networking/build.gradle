@@ -1,11 +1,7 @@
 plugins {
 	id 'java'
 	id 'war'
-<<<<<<< HEAD
-	id 'org.springframework.boot' version '3.3.0'
-=======
 	id 'org.springframework.boot' version '3.3.1'
->>>>>>> develop
 	id 'io.spring.dependency-management' version '1.1.5'
 }
 
@@ -30,14 +26,11 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
-<<<<<<< HEAD
-=======
 	runtimeOnly 'mysql:mysql-connector-java'
->>>>>>> develop
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 }
 
 tasks.named('test') {
