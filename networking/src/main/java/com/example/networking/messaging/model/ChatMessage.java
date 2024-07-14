@@ -1,4 +1,4 @@
-package com.example.messaging.model;
+package com.example.networking.messaging.model;
 
 import java.sql.Timestamp;
 

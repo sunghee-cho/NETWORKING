@@ -1,4 +1,4 @@
-package com.example.messaging.config;
+package com.example.networking.messaging.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -19,7 +19,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
   @Override
   public void registerStompEndpoints(@SuppressWarnings("null") StompEndpointRegistry registry) {
     registry.addEndpoint("/chat")
-    .setAllowedOriginPatterns("*")
-    .withSockJS();
+            .setAllowedOriginPatterns("*")
+            .withSockJS();
   }
 }
