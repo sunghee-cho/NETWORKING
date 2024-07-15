@@ -24,23 +24,23 @@ public class ChatController {
     return chatMessage;
   }
 
-  // 1대1메세지 
+   // 1대1메세지 
   @MessageMapping("/chat.sendPrivateMessage")
-  @SendToUser("/queue/user")  // /queue/user에 소속된 specific 회원에게만 메세지가 전송됨
-  public ChatMessage sendPrivateMessage(ChatMessage chatMessage, SimpMessageHeaderAccessor headerAccessor) {
-    logger.info("메세지가 전달되었습니다: {}", chatMessage.getContent());
-    return chatMessage;
+  @SendToUser("/queue/user") 
+  public ChatMessage sendPrivateMessage(ChatMessage chatMessage) {
+      logger.info("메세지 전달 완료: " + chatMessage.getContent());
+      return chatMessage;
   }
 
   // 1대1채팅에 유저 추가
   @SuppressWarnings("null")
-  @MessageMapping("/chat.addUser") 
-  @SendToUser("/queue/user")
+  @MessageMapping("/chat.addUser")
+  @SendToUser("/queue/user") 
   public ChatMessage addUser(ChatMessage chatMessage, SimpMessageHeaderAccessor headerAccessor) {
-    logger.info("유저가 추가되었습니다: {}", chatMessage.getSender());
-    headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
-    chatMessage.setContent(chatMessage.getSender() + "님이 들어왔습니다.");
-    return chatMessage;
+      logger.info("유저 추가 완료: " + chatMessage.getSender());
+      headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
+      chatMessage.setContent(chatMessage.getSender() + "님이 들어왔습니다.");
+      return chatMessage;
   }
 
   // 그룹채팅에 유저 추가 
