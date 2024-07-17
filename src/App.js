@@ -6,20 +6,26 @@ import Chat from "./pages/Chat";
 import Social from "./pages/Social";
 import Notifications from "./pages/Notification";
 import Joblist from "./pages/Joblist";
+import Login from "./pages/Login";
+import Join from "./pages/Join";
+import LoginContextProvider from "./contexts/LoginContextProvider";
 
 function App() {
   return (
     <div className="App">
       <BrowserRouter>
-        <Header />
-        <Routes>
-          <Route path="/" element={<Social />} />
-          <Route path="/chat" element={<Chat />} />
-          <Route path="/joblist" element={<Joblist />} />
-          {/* <Route path="/member" element={<Member />} /> */}
-          <Route path="/notifications" element={<Notifications />} />
-        </Routes>
-        <Footer />
+        <LoginContextProvider>
+          <Header />
+          <Routes>
+            <Route path="/" element={<Social />} />
+            <Route path="/chat" element={<Chat />} />
+            <Route path="/joblist" element={<Joblist />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/join" element={<Join />} />
+            <Route path="/notifications" element={<Notifications />} />
+          </Routes>
+          <Footer />
+        </LoginContextProvider>
       </BrowserRouter>
     </div>
   );
