@@ -4,20 +4,6 @@ import api from "./api";
 export const login = (username, password) =>
   api.post(`/login?username=${username}&password=${password}`);
 
-// export const login = async (username, password) => {
-//   try {
-//     const response = await api.post(
-//       `/login?username=${username}&password=${password}`
-//     );
-
-//     const token = response.data.token;
-//     console.log("토큰 저장:", token);
-//     localStorage.setItem("token", token);
-//   } catch (error) {
-//     console.error('로그인 실패:', error);
-//   }
-// };
-
 // 사용자 정보
 export const info = () => api.get(`/users/info`);
 

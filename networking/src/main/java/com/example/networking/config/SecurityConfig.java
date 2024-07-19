@@ -40,7 +40,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         log.info("시큐리티 설정...");
 
-        http.cors().and().csrf().disable();
+        http.cors().and().csrf().disable(); // cors 에러가 떠서 추가함 **새로 업데이트**
 
         // 폼 기반 로그인 비활성화
         http.formLogin(login -> login.disable());
