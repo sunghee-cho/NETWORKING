@@ -1,5 +1,48 @@
-// package com.example.networking.messaging.controller;
+package com.example.networking.messaging.controller;
 
-// public class ChatMessageController {
-    
-// }
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import com.example.networking.messaging.entity.Chat;
+import com.example.networking.messaging.service.ChatService;
+
+import java.util.List;
+import java.util.Optional;
+
+@RestController
+@RequestMapping("/api/chat/messages")
+public class ChatMessageController {
+
+    @Autowired
+    private ChatService chatService;
+
+    // 새로운 메세지 저장하기 
+    @PostMapping
+    public ResponseEntity<Chat> createChatMessage(@RequestBody Chat chat) {
+        Chat savedChat = chatService.saveMessage(chat);
+        return ResponseEntity.ok(savedChat);
+    }
+
+    // 채팅방 id로 채팅메세지 찾기
+    @GetMapping("/room/{chatRoomId}")
+    public ResponseEntity<List<Chat>> getMessagesByChatRoomId(@PathVariable Long chatRoomId) {
+        List<Chat> messages = chatService.getMessagesByChatRoomId(chatRoomId);
+        return ResponseEntity.ok(messages);
+    }
+
+    // 유저 id로 채팅메세지 찾기
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Chat>> getMessagesByUserId(@PathVariable Integer userId) {
+        List<Chat> messages = chatService.getMessagesByUserId(userId);
+        return ResponseEntity.ok(messages);
+    }
+
+    // 메제시 읽음 확인하기 
+    @PutMapping("/{chatId}/readStatus")
+    public ResponseEntity<Chat> updatedReadStatus(@PathVariable Long chatId, @RequestParam Boolean readStatus) {
+        Optional<Chat> updatedChat = chatService.updatedReadStatus(chatId, readStatus);
+        return updatedChat.map(ResponseEntity::ok)
+                          .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+}
