@@ -2,9 +2,10 @@ package com.example.networking.messaging.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import com.example.networking.messaging.model.ChatMessage.MessageType;;
 
 @Entity
-@Table(name="ChatRooms")
+@Table(name = "ChatRooms") 
 public class ChatRoom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,8 +17,9 @@ public class ChatRoom {
     @Column(name = "room_name", nullable = false, length = 255)
     private String roomName;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "chat_type", nullable = false, length = 255)
-    private String chatType;
+    private MessageType chatType;
 
     @Column(name = "password", length = 255)
     private String password;
@@ -45,11 +47,11 @@ public class ChatRoom {
     this.roomName = roomName;
     }   
 
-    public String getChatType() {
+    public MessageType getChatType() {
     return chatType;
     }
         
-    public void setChatType(String chatType) {
+    public void setChatType(MessageType chatType) {
     this.chatType = chatType;
     }   
 

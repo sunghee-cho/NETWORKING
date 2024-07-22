@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.networking.messaging.entity.Chat;
+import com.example.networking.messaging.model.ChatMessage;
 import com.example.networking.messaging.service.ChatService;
 
 import java.util.List;
@@ -19,9 +20,9 @@ public class ChatMessageController {
 
     // 새로운 메세지 저장하기 
     @PostMapping
-    public ResponseEntity<Chat> createChatMessage(@RequestBody Chat chat) {
-        Chat savedChat = chatService.saveMessage(chat);
-        return ResponseEntity.ok(savedChat);
+    public ResponseEntity<Chat> createChatMessage(@RequestBody ChatMessage chatMessage) {
+        chatService.saveMessage(chatMessage);
+        return ResponseEntity.ok().build();
     }
 
     // 채팅방 id로 채팅메세지 찾기
@@ -40,8 +41,8 @@ public class ChatMessageController {
 
     // 메제시 읽음 확인하기 
     @PutMapping("/{chatId}/readStatus")
-    public ResponseEntity<Chat> updatedReadStatus(@PathVariable Long chatId, @RequestParam Boolean readStatus) {
-        Optional<Chat> updatedChat = chatService.updatedReadStatus(chatId, readStatus);
+    public ResponseEntity<Chat> updateReadStatus(@PathVariable Long chatId, @RequestParam Boolean readStatus) {
+        Optional<Chat> updatedChat = chatService.updateReadStatus(chatId, readStatus);
         return updatedChat.map(ResponseEntity::ok)
                           .orElseGet(() -> ResponseEntity.notFound().build());
     }

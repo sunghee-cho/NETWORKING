@@ -2,22 +2,43 @@ package com.example.networking.messaging.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.example.networking.messaging.entity.Chat;
+import com.example.networking.messaging.model.ChatMessage;
 import com.example.networking.messaging.repository.ChatRepository;
+
 
 @Service
 public class ChatService {
+
+    private static final Logger logger = LoggerFactory.getLogger(ChatService.class);
 
     @Autowired
     private ChatRepository chatRepository;
     
         // 새로운 메세지 저장하기
-        public Chat saveMessage(Chat chat) {
-        return chatRepository.save(chat); 
-        }
+        @Transactional
+        public void saveMessage(ChatMessage chatMessage) {
+        
+        Chat chat = new Chat();
+        chat.setChatRoomId(chatMessage.getChatRoomId());
+        chat.setUserId(chatMessage.getUserId());
+        chat.setMessage(chatMessage.getContent());
+        chat.setReadStatus(false); 
+
+     
+        logger.info("메세지를 저장중입니다.: " + chat);
+
+     
+        chatRepository.save(chat);
+        logger.info("메세지가 성공적으로 저장되었습니다.");
+     }
+
 
         // 채팅방 id로 채팅메세지 찾기
         public List<Chat> getMessagesByChatRoomId(Long chatRoomId) {
@@ -30,14 +51,14 @@ public class ChatService {
         }
 
        // 메제시 읽음 확인하기 
-         public Optional<Chat> updatedReadStatus(Long chatId, Boolean readStatus) {
-            Optional<Chat> chatOptional = chatRepository.findById(chatId);
-            if(chatOptional.isPresent()){
-                Chat chat = chatOptional.get();
+         public Optional<Chat> updateReadStatus(Long chatId, Boolean readStatus) {
+            Optional<Chat> message = chatRepository.findById(chatId);
+            if(message.isPresent()){
+                Chat chat = message.get();
                 chat.setReadStatus(readStatus);
-                return Optional.of(chatRepository.save(chat));
+                chatRepository.save(chat);
             }
-            return Optional.empty();
+            return message;
 
        }
     
