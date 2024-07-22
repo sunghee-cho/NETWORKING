@@ -51,8 +51,8 @@ const ChatDisplay = () => {
         },
       });
       const data = await response.json();
-      setUserId(data.NO); // user 테이블의 NO를 userId로 세팅하기 
-      setUsername(data.userId); // userId를 username으로 세팅하기 
+      setUserId(data.no); // user 테이블의 NO를 userId로 세팅하기 
+      console.log(data);
     } catch (error) {
       console.error("유저 정보를 불러오지 못했습니다.:", error);
     }

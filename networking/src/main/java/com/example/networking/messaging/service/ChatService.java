@@ -24,21 +24,22 @@ public class ChatService {
         // 새로운 메세지 저장하기
         @Transactional
         public void saveMessage(ChatMessage chatMessage) {
-        
-        Chat chat = new Chat();
-        chat.setChatRoomId(chatMessage.getChatRoomId());
-        chat.setUserId(chatMessage.getUserId());
-        chat.setMessage(chatMessage.getContent());
-        chat.setReadStatus(false); 
+        try {
+            // ChatMessage를 chat entity로 바꿔주기 
+            Chat chat = new Chat();
+            chat.setChatRoomId(chatMessage.getChatRoomId());
+            chat.setUserId(chatMessage.getUserId());
+            chat.setMessage(chatMessage.getContent());
+            chat.setReadStatus(false); // 읽지않음을 디폴트로 설정하기 
 
-     
-        logger.info("메세지를 저장중입니다.: " + chat);
+            logger.info("메세지를 저장중입니다.: " + chat);
 
-     
-        chatRepository.save(chat);
-        logger.info("메세지가 성공적으로 저장되었습니다.");
-     }
-
+            chatRepository.save(chat);
+            logger.info("메세지가 성공적으로 저장되었습니다.");
+                } catch (Exception e) {
+            logger.error("메세지를 저장하는데 실패하였습니다.: ", e);
+                 }
+         }
 
         // 채팅방 id로 채팅메세지 찾기
         public List<Chat> getMessagesByChatRoomId(Long chatRoomId) {
