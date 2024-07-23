@@ -1,0 +1,14 @@
+.new-chat__modal {
+  background-color: #fff;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  width: 50%;
+  height: 50%;
+  transform: translate(50%, 50%);
+  overflow-y: auto;
+  max-height: 50rem;
+}
+
+.error-message {
+  color: #ee6055;
+}

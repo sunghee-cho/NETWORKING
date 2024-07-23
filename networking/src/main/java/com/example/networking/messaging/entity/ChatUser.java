@@ -4,17 +4,18 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "ChatParticipants") 
+@Table(name = "ChatParticipants")
 public class ChatUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
-
     @Column(name = "chat_room_id")
     private Long chatRoomId;
 
     @Column(name = "user_id", nullable = false)
     private Integer userId;
+
+    @Column(name = "nickname", nullable = false, length = 255)
+    private String nickname;
 
     @Column(name = "created_at", updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt;
@@ -22,39 +23,44 @@ public class ChatUser {
     @Column(name = "updated_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private LocalDateTime updatedAt;
 
-    
-  // Getters and Setters
+    // Getters and Setters
     public Long getChatRoomId() {
-    return chatRoomId;
+        return chatRoomId;
     }
 
     public void setChatRoomId(Long chatRoomId) {
-    this.chatRoomId = chatRoomId;
+        this.chatRoomId = chatRoomId;
     }
 
     public Integer getUserId() {
-    return userId;
+        return userId;
     }
 
     public void setUserId(Integer userId) {
-    this.userId = userId;
-    }   
+        this.userId = userId;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
 
     public LocalDateTime getCreatedAt() {
-    return createdAt;
-    }   
+        return createdAt;
+    }
 
     public void setCreatedAt(LocalDateTime createdAt) {
-    this.createdAt = createdAt;
-    }   
+        this.createdAt = createdAt;
+    }
 
     public LocalDateTime getUpdatedAt() {
-    return updatedAt;
+        return updatedAt;
     }
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
-    this.updatedAt = updatedAt;
+        this.updatedAt = updatedAt;
     }
-
-
 }

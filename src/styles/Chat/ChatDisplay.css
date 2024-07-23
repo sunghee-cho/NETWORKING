@@ -1,0 +1,23 @@
+/* .chat-display {
+  border-radius: 1px solid black;
+} */
+
+.chat-display__wrapper {
+    display: flex;
+    gap: 2rem;
+}
+
+.chat-display__holder {
+  display: flex;
+}
+
+.chat-display__button {
+  border: 0;
+}
+
+.chat-display__input {
+    margin: 1rem;
+    padding: 0.5rem 1rem;
+    border: 0;
+    width: 18.75rem;
+}

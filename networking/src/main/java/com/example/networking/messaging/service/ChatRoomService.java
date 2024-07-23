@@ -1,6 +1,7 @@
 package com.example.networking.messaging.service;
 
 import com.example.networking.messaging.entity.ChatRoom;
+import com.example.networking.messaging.model.ChatMessage.MessageType;
 import com.example.networking.messaging.repository.ChatRoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ import java.util.Optional;
 
 @Service
 public class ChatRoomService {
+    
     @Autowired
     private ChatRoomRepository chatRoomRepository;
 
@@ -30,7 +32,7 @@ public class ChatRoomService {
 
     // 모든 그룹채팅창 찾기 
     public List<ChatRoom> getAllGroupChatRooms() {
-        return chatRoomRepository.findByChatType("GROUP_CHAT");
+        return chatRoomRepository.findByChatType(MessageType.GROUP_CHAT);
     }
 
     // 채팅방 id로 비밀채팅방 찾기 
@@ -46,5 +48,11 @@ public class ChatRoomService {
     // 모든 채팅방 찾기 
     public List<ChatRoom> getAllChatRooms() {
         return chatRoomRepository.findAll();
+    }
+
+    // 채팅방 비밀번호 확인
+    public boolean validateChatRoomPassword(Long chatRoomId, String password) {
+        Optional<ChatRoom> chatRoom = chatRoomRepository.findById(chatRoomId);
+        return chatRoom.isPresent() && chatRoom.get().getPassword().equals(password);
     }
 }

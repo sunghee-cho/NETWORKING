@@ -24,10 +24,10 @@ public class ChatController {
     }
 
     // 그룹메세지
-    @MessageMapping("/chat.sendMessage/{roomId}")
-    @SendTo("/topic/groupChatRoom/{roomId}") // /topic/groupChatRoom/{roodId}에 소속된 모든 회원들에게 메세지가 전송됨
+    @MessageMapping("/chat.sendMessage/{chatRoomId}")
+    @SendTo("/topic/groupChatRoom/{chatRoomId}") 
     public ChatMessage sendGroupMessage(ChatMessage chatMessage) {
-        chatService.saveMessage(chatMessage); // db에 메세지 저장하기
+        chatService.saveMessage(chatMessage); 
         return chatMessage;
     }
 
@@ -46,36 +46,23 @@ public class ChatController {
     @SendToUser("/queue/user")
     public ChatMessage addUser(ChatMessage chatMessage, SimpMessageHeaderAccessor headerAccessor) {
         logger.info("유저 추가 완료: " + chatMessage.getSender());
-        headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
+        headerAccessor.getSessionAttributes().put("nickname", chatMessage.getSender());
+        headerAccessor.getSessionAttributes().put("userId", chatMessage.getUserId().toString());
         chatMessage.setContent(chatMessage.getSender() + "님이 들어왔습니다.");
+        chatMessage.setType(ChatMessage.MessageType.JOIN);
         return chatMessage;
     }
 
     // 그룹채팅에 유저 추가 
     @SuppressWarnings("null")
-    @MessageMapping("/chat.addUser/{roomId}")
-    @SendTo("/topic/groupChatRoom/{roomId}")
-    public ChatMessage addUserToRoom(ChatMessage chatMessage, @DestinationVariable String roomId, SimpMessageHeaderAccessor headerAccessor) {
-        headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
-        headerAccessor.getSessionAttributes().put("roomId", roomId);
+    @MessageMapping("/chat.addUser/{chatRoomId}")
+    @SendTo("/topic/groupChatRoom/{chatRoomId}")
+    public ChatMessage addUserToRoom(ChatMessage chatMessage, @DestinationVariable String chatRoomId, SimpMessageHeaderAccessor headerAccessor) {
+        headerAccessor.getSessionAttributes().put("nickname", chatMessage.getSender());
+        headerAccessor.getSessionAttributes().put("userId", chatMessage.getUserId().toString());
+        headerAccessor.getSessionAttributes().put("chatRoomId", chatRoomId);
         chatMessage.setContent(chatMessage.getSender() + "님이 들어왔습니다.");
+        chatMessage.setType(ChatMessage.MessageType.JOIN);
         return chatMessage;
     }
-
-
-  // 유저 강퇴 
-//   @SuppressWarnings("null")
-//   @MessageMapping("/chat.removeUser/{roomId}")
-//   @SendTo("/topic/groupChatRoom/{roomId}")
-//   public ChatMessage removeUser(@DestinationVariable String roomId, ChatMessage chatMessage, SimpMessageHeaderAccessor headerAccessor) {
-//     headerAccessor.getSessionAttributes().remove("username", chatMessage.getSender());
-//     chatMessage.setContent(chatMessage.getSender() + "님이 강퇴되었습니다.");
-//     return chatMessage;
-// }
-
 }
-
-
-
-
-

@@ -1,14 +1,22 @@
 import ChatDisplay from "../components/Chat/ChatDisplay";
-import "../styles/Chat/ChatDisplay.css";
+import ChatList from "../components/Chat/ChatList";
+import ChatMember from "../components/Chat/ChatMember";
+import "../styles/Chat/Chat.css";
 
-const Chat = ({ currentUser, isLoggedin, setIsLoggedin }) => {
+const Chat = () => {
   return (
-    <main>
-      <ChatDisplay
-        currentUser={currentUser}
-        isLoggedin={isLoggedin}
-        setIsLoggedin={setIsLoggedin}
-      />
+    <main className="chat">
+      <div className="chat__container">
+        <div className="chat__box">
+          <ChatList />
+        </div>
+        {/* <div className="chat__box">
+          <ChatDisplay />
+        </div> */}
+        <div className="chat__box">
+          <ChatMember />
+        </div>
+      </div>
     </main>
   );
 };

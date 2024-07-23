@@ -5,20 +5,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.networking.dto.CustomUser;
 import com.example.networking.dto.Users;
 import com.example.networking.service.UserService;
+import com.example.networking.messaging.service.ChatUserService;
 
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *    👨‍💻 회원 정보
@@ -34,6 +31,9 @@ public class UserController {
     
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ChatUserService chatUserService;
 
     /**
      * 사용자 정보 조회
@@ -53,6 +53,41 @@ public class UserController {
         // 인증된 사용자 정보 
         if( user != null )
             return new ResponseEntity<>(user, HttpStatus.OK);
+
+        // 인증 되지 않음
+        return new ResponseEntity<>("UNAUTHORIZED", HttpStatus.UNAUTHORIZED);
+    }
+
+    /**
+     * 사용자 정보 및 닉네임 조회   -- 채팅시스템을 위해 새로 업데이트 --
+     * @param customUser
+     * @return
+     */
+    @SuppressWarnings("unused")
+    @Secured("ROLE_USER")         
+    @GetMapping("/infoWithNickname")
+    public ResponseEntity<?> userInfoWithNickname(@AuthenticationPrincipal CustomUser customUser) {
+        
+        log.info("::::: customUser :::::");
+        log.info("customUser : "+ customUser);
+
+        Users user = customUser.getUser();
+        log.info("user : " + user);
+
+        String nickname = chatUserService.getNicknameByUserId(user.getNo());
+
+        // 인증된 사용자 정보 
+        if( user != null ) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("no", user.getNo());
+            response.put("userId", user.getUserId());
+            response.put("nickname", nickname);
+            response.put("name", user.getName());
+            response.put("email", user.getEmail());
+            // add other fields if needed
+            
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
 
         // 인증 되지 않음
         return new ResponseEntity<>("UNAUTHORIZED", HttpStatus.UNAUTHORIZED);
