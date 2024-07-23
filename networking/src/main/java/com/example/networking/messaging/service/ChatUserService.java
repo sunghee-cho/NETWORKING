@@ -38,9 +38,9 @@ public class ChatUserService {
         return chatUserRepository.existsByChatRoomIdAndUserId(chatRoomId, userId);
     }
 
-    // 유저 id로 닉네임 찾기 
-    public String getNicknameByUserId(Integer userId) {
-        return chatUserRepository.findNicknameByUserId(userId);
+    // 유저 id & 채팅방 id로 닉네임 찾기 
+    public String getNicknameByUserIdAndChatRoomId(Integer userId, Long chatRoomId) {
+        return chatUserRepository.findNicknameByUserIdAndChatRoomId(userId, chatRoomId);
     }
 
     // 채팅방에 참여유저 추가하기

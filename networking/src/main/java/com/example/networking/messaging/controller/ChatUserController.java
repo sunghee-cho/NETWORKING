@@ -26,24 +26,28 @@ public class ChatUserController {
     @Autowired
     private ChatUserService chatUserService;
 
+    // 채팅방에 유저 추가하기 
     @PostMapping
     public ResponseEntity<ChatUser> addUserToChatRoom(@RequestBody ChatUser chatUser) {
         ChatUser savedChatUser = chatUserService.addUserToChatRoom(chatUser);
         return ResponseEntity.ok(savedChatUser);
     }
 
-    @GetMapping("/room/{chatRoomId}")
+    // 채팅방 id로 채팅 참가자 찾기 
+    @GetMapping("/room/{chatRoomId}/members")
     public ResponseEntity<List<ChatUser>> getParticipantsByChatRoomId(@PathVariable Long chatRoomId) {
         List<ChatUser> participants = chatUserService.getParticipantsByChatRoomId(chatRoomId);
         return ResponseEntity.ok(participants);
     }
 
+    // 채팅방 id & 유저 id로 참가자 삭제하기 
     @DeleteMapping("/room/{chatRoomId}/user/{userId}")
     public ResponseEntity<Void> removeUserFromChatRoom(@PathVariable Long chatRoomId, @PathVariable Integer userId) {
         chatUserService.removeUserFromChatRoom(chatRoomId, userId);
         return ResponseEntity.noContent().build();
     }
 
+    // 채팅방 id와 token으로 현재 채팅방 참가자 확인하기 
     @GetMapping("/{chatRoomId}/isParticipant")
     public ResponseEntity<?> isUserParticipant(@PathVariable Long chatRoomId, @RequestHeader("Authorization") String token) {
         Integer userId = getUserIdFromToken(token); 
@@ -53,6 +57,7 @@ public class ChatUserController {
         return ResponseEntity.ok(response);
     }
 
+    // 닉네임, 비밀번호, 토큰 등등 포함하여 채팅방에 참가하기 
     @PostMapping("/join/{chatRoomId}")
     public ResponseEntity<?> joinChatRoom(@PathVariable Long chatRoomId, @RequestBody Map<String, String> payload, @RequestHeader("Authorization") String token) {
         String nickname = payload.get("nickname");

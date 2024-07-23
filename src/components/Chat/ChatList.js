@@ -72,7 +72,7 @@ export default function ChatList() {
           setSelectedChatRoom(chatRoom);
           setIsJoined(true);
         } else {
-          setSelectedChatRoom(null);
+          setSelectedChatRoom(chatRoom);
           setShowJoinModal(true);
         }
       } else {
@@ -133,7 +133,10 @@ export default function ChatList() {
       </div>
       <div style={{ marginLeft: "20px", flexGrow: 1 }}>
         {isJoined && selectedChatRoom && (
-          <ChatDisplay chatRoom={selectedChatRoom} />
+          <ChatDisplay
+            key={selectedChatRoom.chatRoomId}
+            chatRoom={selectedChatRoom}
+          />
         )}
       </div>
       <Modal

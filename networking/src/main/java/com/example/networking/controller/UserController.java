@@ -66,7 +66,7 @@ public class UserController {
     @SuppressWarnings("unused")
     @Secured("ROLE_USER")         
     @GetMapping("/infoWithNickname")
-    public ResponseEntity<?> userInfoWithNickname(@AuthenticationPrincipal CustomUser customUser) {
+    public ResponseEntity<?> userInfoWithNickname(@AuthenticationPrincipal CustomUser customUser, @RequestParam Long chatRoomId) {
         
         log.info("::::: customUser :::::");
         log.info("customUser : "+ customUser);
@@ -74,7 +74,7 @@ public class UserController {
         Users user = customUser.getUser();
         log.info("user : " + user);
 
-        String nickname = chatUserService.getNicknameByUserId(user.getNo());
+        String nickname = chatUserService.getNicknameByUserIdAndChatRoomId(user.getNo(), chatRoomId);
 
         // 인증된 사용자 정보 
         if( user != null ) {
@@ -84,7 +84,6 @@ public class UserController {
             response.put("nickname", nickname);
             response.put("name", user.getName());
             response.put("email", user.getEmail());
-            // add other fields if needed
             
             return new ResponseEntity<>(response, HttpStatus.OK);
         }

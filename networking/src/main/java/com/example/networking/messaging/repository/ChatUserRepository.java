@@ -15,6 +15,7 @@ public interface ChatUserRepository extends JpaRepository<ChatUser, Long> {
     void deleteByChatRoomIdAndUserId(Long chatRoomId, Integer userId); // 채팅방과 유저 id로 유저 삭제하기
     boolean existsByChatRoomIdAndUserId(Long chatRoomId, Integer userId); // 채팅방 id와 유저 id로 유저 존재 여부 확인
 
-    @Query("SELECT c.nickname FROM ChatUser c WHERE c.userId = :userId")
-    String findNicknameByUserId(@Param("userId") Integer userId); // 유저 id로 닉네임 찾기 
+    // 채팅방 id와 유저 id로 닉네임 찾기 
+    @Query("SELECT c.nickname FROM ChatUser c WHERE c.userId = :userId AND c.chatRoomId = :chatRoomId")
+    String findNicknameByUserIdAndChatRoomId(@Param("userId") Integer userId, @Param("chatRoomId") Long chatRoomId);
 }
