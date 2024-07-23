@@ -5,12 +5,11 @@ import java.time.LocalDateTime;
 
 
 @Entity
-@Table(name = "Chats")  
+@Table(name = "Chats")
 public class Chat {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     @Column(name = "chat_id")
     private Long chatId;
 
@@ -23,6 +22,9 @@ public class Chat {
     @Column(name = "message", nullable = false)
     private String message;
 
+    @Column(name = "nickname", nullable = false)
+    private String nickname;
+
     @Column(name = "read_status")
     private Boolean readStatus;
 
@@ -31,7 +33,6 @@ public class Chat {
 
     @Column(name = "updated_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private LocalDateTime updatedAt;
-
 
     // Getters and Setters
     public Long getChatId() {
@@ -66,6 +67,14 @@ public class Chat {
         this.message = message;
     }
 
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
     public Boolean getReadStatus() {
         return readStatus;
     }
@@ -89,5 +98,4 @@ public class Chat {
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
-
 }

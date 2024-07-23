@@ -1,8 +1,11 @@
+import "../../styles/Chat/ChatMember.css";
 import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
+import profilePic from "../../assets/images/고양이 프로필.png";
 
 const ChatMember = ({ chatRoom }) => {
   const [members, setMembers] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
     const fetchChatMembers = async () => {
@@ -14,7 +17,7 @@ const ChatMember = ({ chatRoom }) => {
 
       try {
         const response = await fetch(
-          `/api/chat/rooms/${chatRoom.chatRoomId}/members`,
+          `/api/chat/users/room/${chatRoom.chatRoomId}/members`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -25,12 +28,18 @@ const ChatMember = ({ chatRoom }) => {
 
         if (response.ok) {
           const data = await response.json();
-          setMembers(data);
+          console.log("참여 유저:", data);
+          setMembers(data.participants);
+          const currentUserId = data.currentUser;
+          const currentUser = data.participants.find(
+            (member) => member.userId === currentUserId
+          );
+          setCurrentUser(currentUser);
         } else {
-          console.error("Failed to fetch chat members.");
+          console.error("채팅 참가 유저 불러오기에 실패하였습니다.");
         }
       } catch (error) {
-        console.error("An error occurred:", error);
+        console.error("애러 발생:", error);
       }
     };
 
@@ -41,20 +50,41 @@ const ChatMember = ({ chatRoom }) => {
 
   return (
     <div>
-      <div>
-        <p>내프로필</p>
-      </div>
-      <ul>
-        {members.map((member) => (
-          <li key={member.userId}>
-            <img
-              src="https://via.placeholder.com/50"
-              alt="Profile"
-              style={{ borderRadius: "50%", marginRight: "10px" }}
-            />
-            {member.nickname}
+      <ul className="chat-member__list">
+        {currentUser && (
+          <li className="chat-member__holder">
+            <div>
+              <img
+                className="chat-member__pic"
+                src={profilePic}
+                alt="프로필사진"
+                style={{ borderRadius: "50%", marginRight: "10px" }}
+              />
+            </div>
+            <div className="chat-member__nickname">{currentUser.nickname}</div>
           </li>
-        ))}
+        )}
+      </ul>
+      <hr />
+      <div>
+        <p>참여 {members.length}명</p>{" "}
+      </div>
+      <ul className="chat-member__ul">
+        {members
+          .filter((member) => member.userId !== currentUser?.userId)
+          .map((member) => (
+            <li className="chat-member__holder" key={member.userId}>
+              <div>
+                <img
+                  className="chat-member__pic"
+                  src={profilePic}
+                  alt="프로필사진"
+                  style={{ borderRadius: "50%", marginRight: "10px" }}
+                />
+              </div>
+              <div className="chat-member__nickname">{member.nickname}</div>
+            </li>
+          ))}
       </ul>
     </div>
   );

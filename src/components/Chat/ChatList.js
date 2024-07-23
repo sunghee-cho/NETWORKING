@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
 import NewChat from "./NewChat";
-import ChatDisplay from "./ChatDisplay";
 import Modal from "react-modal";
-import Cookies from "js-cookie"; // Import js-cookie to get the token
+import Cookies from "js-cookie";
 
 Modal.setAppElement("#root");
 
-export default function ChatList() {
+const ChatList = ({ onSelectChatRoom }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [chatRooms, setChatRooms] = useState([]);
   const [selectedChatRoom, setSelectedChatRoom] = useState(null);
@@ -16,27 +15,26 @@ export default function ChatList() {
   const [isJoined, setIsJoined] = useState(false);
 
   useEffect(() => {
-    // Function to fetch group chat rooms
     const fetchChatRooms = async () => {
-      const token = Cookies.get("accessToken"); // Retrieve the token from cookies
+      const token = Cookies.get("accessToken");
 
       try {
         const response = await fetch("/api/chat/rooms/group", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+            Authorization: `Bearer ${token}`,
           },
         });
 
         if (response.ok) {
           const data = await response.json();
-          setChatRooms(data); // Store fetched chat rooms in state
+          setChatRooms(data);
         } else {
-          console.error("Failed to fetch chat rooms.");
+          console.error("채팅방을 가져오지 못하였습니다.");
         }
       } catch (error) {
-        console.error("An error occurred:", error);
+        console.error("에러 발생:", error);
       }
     };
 
@@ -52,7 +50,7 @@ export default function ChatList() {
   };
 
   const handleChatRoomClick = async (chatRoom) => {
-    const token = Cookies.get("accessToken"); // Retrieve the token from cookies
+    const token = Cookies.get("accessToken");
 
     try {
       const response = await fetch(
@@ -61,7 +59,7 @@ export default function ChatList() {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -71,20 +69,21 @@ export default function ChatList() {
         if (data.isJoined) {
           setSelectedChatRoom(chatRoom);
           setIsJoined(true);
+          onSelectChatRoom(chatRoom); // 채팅방 선택에 따라 바뀜
         } else {
-          setSelectedChatRoom(chatRoom);
+          setSelectedChatRoom(null);
           setShowJoinModal(true);
         }
       } else {
-        console.error("Failed to check if user is joined.");
+        console.error("채팅방에 참가한 유저인지 확인하지 못하였습니다.");
       }
     } catch (error) {
-      console.error("An error occurred:", error);
+      console.error("에러 발생:", error);
     }
   };
 
   const handleJoinChat = async () => {
-    const token = Cookies.get("accessToken"); // Retrieve the token from cookies
+    const token = Cookies.get("accessToken");
 
     try {
       const response = await fetch(
@@ -93,7 +92,7 @@ export default function ChatList() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({ nickname, password }),
         }
@@ -102,11 +101,12 @@ export default function ChatList() {
       if (response.ok) {
         setIsJoined(true);
         setShowJoinModal(false);
+        onSelectChatRoom(selectedChatRoom); 
       } else {
-        console.error("Failed to join chat room.");
+        console.error("채팅방 참여에 실패하였습니다.");
       }
     } catch (error) {
-      console.error("An error occurred:", error);
+      console.error("에러 발생:", error);
     }
   };
 
@@ -115,7 +115,6 @@ export default function ChatList() {
       <div>
         <button>전체 채팅방</button>
         <button>나의 채팅방</button>
-        {/* Map through chatRooms state to render list of chat rooms */}
         <ul>
           {chatRooms.map((chatRoom) => (
             <li
@@ -130,14 +129,6 @@ export default function ChatList() {
         <article>
           <NewChat isOpen={isOpen} closeModal={closeModal} />
         </article>
-      </div>
-      <div style={{ marginLeft: "20px", flexGrow: 1 }}>
-        {isJoined && selectedChatRoom && (
-          <ChatDisplay
-            key={selectedChatRoom.chatRoomId}
-            chatRoom={selectedChatRoom}
-          />
-        )}
       </div>
       <Modal
         isOpen={showJoinModal}
@@ -166,4 +157,6 @@ export default function ChatList() {
       </Modal>
     </div>
   );
-}
+};
+
+export default ChatList;

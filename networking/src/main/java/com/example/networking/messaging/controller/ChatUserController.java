@@ -35,9 +35,13 @@ public class ChatUserController {
 
     // 채팅방 id로 채팅 참가자 찾기 
     @GetMapping("/room/{chatRoomId}/members")
-    public ResponseEntity<List<ChatUser>> getParticipantsByChatRoomId(@PathVariable Long chatRoomId) {
+    public ResponseEntity<Map<String, Object>> getParticipantsByChatRoomId(@PathVariable Long chatRoomId, @RequestHeader("Authorization") String token) {
+        Integer currentUserId = getUserIdFromToken(token);
         List<ChatUser> participants = chatUserService.getParticipantsByChatRoomId(chatRoomId);
-        return ResponseEntity.ok(participants);
+        Map<String, Object> response = new HashMap<>();
+        response.put("currentUser", currentUserId);
+        response.put("participants", participants);
+        return ResponseEntity.ok(response);
     }
 
     // 채팅방 id & 유저 id로 참가자 삭제하기 
@@ -70,7 +74,7 @@ public class ChatUserController {
     // 유저id에서 토큰 가져오기
     private Integer getUserIdFromToken(String token) {
         if (token == null || !token.startsWith("Bearer ")) {
-            throw new IllegalArgumentException("Invalid token format.");
+            throw new IllegalArgumentException("잘못된 토큰 방식입니다.");
         }
     
         String jwtToken = token.substring(7);
@@ -83,7 +87,7 @@ public class ChatUserController {
                 .parseClaimsJws(jwtToken)
                 .getBody();
     
-        String userIdString = claims.get("uno", String.class); // Corrected the method call
+        String userIdString = claims.get("uno", String.class); 
         if (userIdString == null) {
             throw new NumberFormatException("Token does not contain 'uno' claim.");
         }

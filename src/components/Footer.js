@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 
 export default function Footer() {
   const location = useLocation();
-  const hideFooterForPaths = ["/", "/chat", "/joblist", "/notifications"];
+  const hideFooterForPaths = ["/", "/joblist", "/notifications"];
 
   if (hideFooterForPaths.includes(location.pathname)) {
     return <></>;

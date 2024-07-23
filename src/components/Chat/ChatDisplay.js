@@ -14,17 +14,43 @@ const ChatDisplay = ({ chatRoom }) => {
 
   const fetchUserInfo = async (token, chatRoomId) => {
     try {
-      const response = await fetch(`http://localhost:8080/users/infoWithNickname?chatRoomId=${chatRoomId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        `http://localhost:8080/users/infoWithNickname?chatRoomId=${chatRoomId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       const data = await response.json();
       setUserId(data.no);
-      setNickname(data.nickname); 
+      setNickname(data.nickname);
       console.log(data);
     } catch (error) {
       console.error("유저 정보를 불러오지 못했습니다.:", error);
+    }
+  };
+
+  const fetchMessages = async (token, chatRoomId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/chat/messages/room/${chatRoomId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const data = await response.json();
+      console.log("불러온 메세지:", data); 
+      const normalizedMessages = data.map((msg) => ({
+        ...msg,
+        content: msg.message,
+        sender: msg.nickname, 
+      }));
+      setMessages(normalizedMessages);
+    } catch (error) {
+      console.error("메세지를 불러오지 못했습니다.:", error);
     }
   };
 
@@ -32,6 +58,7 @@ const ChatDisplay = ({ chatRoom }) => {
     const token = Cookies.get("accessToken");
     if (token && chatRoom) {
       fetchUserInfo(token, chatRoom.chatRoomId);
+      fetchMessages(token, chatRoom.chatRoomId);
     }
   }, [chatRoom]);
 
@@ -123,7 +150,9 @@ const ChatDisplay = ({ chatRoom }) => {
               {msg.type === "JOIN" || msg.type === "LEAVE" ? (
                 msg.content
               ) : (
-                <><strong>{msg.sender}</strong>: {msg.content}</>
+                <>
+                  <strong>{msg.sender}</strong>: {msg.content}
+                </>
               )}
             </div>
           </div>
@@ -165,7 +194,6 @@ const ChatDisplay = ({ chatRoom }) => {
       </div>
     </div>
   );
-  
 };
 
 export default ChatDisplay;

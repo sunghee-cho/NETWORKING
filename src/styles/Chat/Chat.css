@@ -1,5 +1,14 @@
 .chat__container {
   display: flex;
-  justify-content: space-around;
-  gap: 1rem;
+  justify-content: space-evenly;
+}
+
+.chat__box {
+  padding: 1.5rem;
+  border: 0.1rem solid black;
+  border-radius: 1rem;
+}
+
+.chat__box--display{
+  width: 700px;
 }

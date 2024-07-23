@@ -1,7 +1,3 @@
-/* .chat-display {
-  border-radius: 1px solid black;
-} */
-
 .chat-display__wrapper {
     display: flex;
     gap: 2rem;

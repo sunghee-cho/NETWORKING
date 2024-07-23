@@ -1,0 +1,24 @@
+.chat-member__list {
+  list-style-type: none;
+  padding: 0;
+
+}
+
+.chat-member__holder{
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.625rem;
+}
+
+.chat-member__pic {
+    width: 3.125rem;
+    height: 3.125rem;
+}
+
+.chat-member__nickname{
+    font-size: 0.9rem;
+}
+
+.chat-member__ul{
+    padding: 0;
+}

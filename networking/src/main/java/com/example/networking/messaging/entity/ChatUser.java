@@ -5,12 +5,13 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "ChatParticipants")
+@IdClass(ChatUserId.class)
 public class ChatUser {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "chat_room_id")
     private Long chatRoomId;
 
+    @Id
     @Column(name = "user_id", nullable = false)
     private Integer userId;
 

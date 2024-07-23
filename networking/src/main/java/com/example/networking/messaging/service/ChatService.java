@@ -13,6 +13,7 @@ import com.example.networking.messaging.model.ChatMessage;
 import com.example.networking.messaging.repository.ChatRepository;
 
 
+
 @Service
 public class ChatService {
 
@@ -20,6 +21,7 @@ public class ChatService {
 
     @Autowired
     private ChatRepository chatRepository;
+
     
         // 새로운 메세지 저장하기
         @Transactional
@@ -31,6 +33,7 @@ public class ChatService {
             chat.setUserId(chatMessage.getUserId());
             chat.setMessage(chatMessage.getContent());
             chat.setReadStatus(false); // 읽지않음을 디폴트로 설정하기 
+            chat.setNickname(chatMessage.getSender());
 
             logger.info("메세지를 저장중입니다.: " + chat);
 
