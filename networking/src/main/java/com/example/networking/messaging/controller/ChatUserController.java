@@ -95,5 +95,14 @@ public class ChatUserController {
         return Integer.parseInt(userIdString);
     }
     
+    @GetMapping("/{chatRoomId}/isActive")
+    public ResponseEntity<?> isUserActive(@PathVariable Long chatRoomId, @RequestHeader("Authorization") String token) {
+        Integer userId = getUserIdFromToken(token);
+        boolean isActive = chatUserService.isUserActive(chatRoomId, userId);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("isActive", isActive);
+        return ResponseEntity.ok(response);
+    }
+
     
 }

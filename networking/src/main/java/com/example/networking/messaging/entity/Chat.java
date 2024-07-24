@@ -1,5 +1,6 @@
 package com.example.networking.messaging.entity;
 
+import com.example.networking.messaging.model.ChatMessage;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
@@ -36,6 +37,10 @@ public class Chat {
 
     @Column(name = "updated_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private LocalDateTime updatedAt;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type", nullable = false)
+    private ChatMessage.MessageType type; 
 
     @ManyToOne
     @JoinColumn(name = "chat_room_id", insertable = false, updatable = false)
@@ -121,5 +126,13 @@ public class Chat {
 
     public void setChatRoom(ChatRoom chatRoom) {
         this.chatRoom = chatRoom;
+    }
+
+    public ChatMessage.MessageType getType() {
+        return type;
+    }
+
+    public void setType(ChatMessage.MessageType type) {
+        this.type = type;
     }
 }

@@ -9,11 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.example.networking.messaging.service.ChatService;
-
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.util.Optional;
+
 
 @Service
 public class ChatUserService {
@@ -48,18 +48,28 @@ public class ChatUserService {
     @Transactional
     public void removeUserFromChatRoom(Long chatRoomId, Integer userId) {
         String nickname = chatUserRepository.findNicknameByUserIdAndChatRoomId(userId, chatRoomId);
-        chatUserRepository.deleteByChatRoomIdAndUserId(chatRoomId, userId);
-    
-        ChatMessage chatMessage = new ChatMessage();
-        chatMessage.setType(ChatMessage.MessageType.LEAVE);
-        chatMessage.setSender(nickname);
-        chatMessage.setContent(nickname + " 님이 나갔습니다.");
-        chatMessage.setUserId(userId);
-        chatMessage.setChatRoomId(chatRoomId);
-    
-        chatService.saveMessage(chatMessage);
-    
-        messagingTemplate.convertAndSend("/topic/groupChatRoom/" + chatRoomId, chatMessage);
+        Optional<ChatUser> chatUserOptional = chatUserRepository.findByChatRoomIdAndUserIdAndIsActiveTrue(chatRoomId, userId);
+
+        if (chatUserOptional.isPresent()) {
+            ChatUser chatUser = chatUserOptional.get();
+            chatUser.setIsActive(false); // 액티브로 유저 마크하기 
+            chatUserRepository.save(chatUser);
+
+            ChatMessage chatMessage = new ChatMessage();
+            chatMessage.setType(ChatMessage.MessageType.LEAVE);
+            chatMessage.setSender(nickname);
+            chatMessage.setContent(nickname + " 님이 나갔습니다.");
+            chatMessage.setUserId(userId);
+            chatMessage.setChatRoomId(chatRoomId);
+
+            // leave 메세지 db에 저장하기
+            chatService.saveMessage(chatMessage);
+
+            messagingTemplate.convertAndSend("/topic/groupChatRoom/" + chatRoomId, chatMessage);
+        } else {
+            
+            System.out.println("유저를 찾지 못했습니다: " + chatRoomId + " 유저 아이디: " + userId);
+        }
     }
     
 
@@ -88,5 +98,10 @@ public class ChatUserService {
         participant.setNickname(nickname);
         participant.setUserId(userId);
         chatUserRepository.save(participant);
+    }
+
+    public boolean isUserActive(Long chatRoomId, Integer userId) {
+        Optional<ChatUser> chatUser = chatUserRepository.findByChatRoomIdAndUserIdAndIsActiveTrue(chatRoomId, userId);
+        return chatUser.isPresent();
     }
 }

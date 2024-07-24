@@ -31,6 +31,7 @@ public class ChatService {
             chat.setReadStatus(false); // 읽지않음을 디폴트로 설정하기 
             chat.setNickname(chatMessage.getSender());
             chat.setIsDeleted(false); // 삭제되지 않음으로 설정
+            chat.setType(chatMessage.getType());
 
             logger.info("메세지를 저장중입니다.: " + chat);
 

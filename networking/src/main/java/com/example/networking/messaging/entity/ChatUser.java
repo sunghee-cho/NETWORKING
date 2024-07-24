@@ -26,6 +26,9 @@ public class ChatUser {
     @Column(name = "updated_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private LocalDateTime updatedAt;
 
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive = true;
+
     @ManyToOne
     @JoinColumn(name = "chat_room_id", insertable = false, updatable = false)
     @JsonBackReference
@@ -56,6 +59,15 @@ public class ChatUser {
         this.nickname = nickname;
     }
 
+    public Boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Boolean isActive) {
+        this.isActive = isActive;
+    }
+
+    
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }

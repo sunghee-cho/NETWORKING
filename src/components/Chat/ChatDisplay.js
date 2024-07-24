@@ -13,6 +13,8 @@ const ChatDisplay = ({ chatRoom, onLeave }) => {
   const [showLeaveModal, setShowLeaveModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedMessage, setSelectedMessage] = useState(null);
+  const [showJoinModal, setShowJoinModal] = useState(false);
+  const [isJoined, setIsJoined] = useState(false);
   const stompClient = useRef(null);
 
   const fetchUserInfo = async (token, chatRoomId) => {
@@ -28,7 +30,6 @@ const ChatDisplay = ({ chatRoom, onLeave }) => {
       const data = await response.json();
       setUserId(data.no);
       setNickname(data.nickname);
-      console.log(data);
     } catch (error) {
       console.error("유저 정보를 불러오지 못했습니다.:", error);
     }
@@ -45,11 +46,11 @@ const ChatDisplay = ({ chatRoom, onLeave }) => {
         }
       );
       const data = await response.json();
-      console.log("불러온 메세지:", data);
       const normalizedMessages = data.map((msg) => ({
         ...msg,
         content: msg.message,
-        sender: msg.nickname,
+        sender: msg.nickname, 
+        type: msg.type || "GROUP_CHAT"
       }));
       setMessages(normalizedMessages);
     } catch (error) {
@@ -57,53 +58,75 @@ const ChatDisplay = ({ chatRoom, onLeave }) => {
     }
   };
 
+  const connect = () => {
+    const token = Cookies.get("accessToken");
+    const socket = new SockJS(`http://localhost:8080/chat?token=${token}`);
+    stompClient.current = Stomp.over(socket);
+    stompClient.current.connect(
+      {},
+      (frame) => {
+        console.log("연결성공: " + frame);
+
+        stompClient.current.subscribe(
+          `/topic/groupChatRoom/${chatRoom.chatRoomId}`,
+          (message) => {
+            const newMessage = JSON.parse(message.body);
+            setMessages((prevMessages) => [...prevMessages, newMessage]);
+          }
+        );
+
+        stompClient.current.send(
+          `/app/chat.addUser/${chatRoom.chatRoomId}`,
+          {},
+          JSON.stringify({ sender: nickname, userId })
+        );
+      },
+      (error) => {
+        console.error("웹소켓 연결에 실패하였습니다.", error);
+      }
+    );
+  };
+
   useEffect(() => {
     const token = Cookies.get("accessToken");
     if (token && chatRoom) {
       fetchUserInfo(token, chatRoom.chatRoomId);
       fetchMessages(token, chatRoom.chatRoomId);
+
+      const checkActiveStatus = async () => {
+        try {
+          const response = await fetch(
+            `/api/chat/users/${chatRoom.chatRoomId}/isActive`,
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          if (response.ok) {
+            const data = await response.json();
+            if (!data.isActive) {
+              setShowJoinModal(true);
+            } else {
+              setIsJoined(true);
+            }
+          } else {
+            console.error("유저 활성 상태를 확인하지 못하였습니다.");
+          }
+        } catch (error) {
+          console.error("에러 발생:", error);
+        }
+      };
+
+      checkActiveStatus();
     }
   }, [chatRoom]);
 
   useEffect(() => {
-    const token = Cookies.get("accessToken");
-    if (!token) {
-      console.error("저장된 토큰이 없습니다.");
-      return;
-    }
-
-    const connect = () => {
-      const socket = new SockJS(`http://localhost:8080/chat?token=${token}`);
-      stompClient.current = Stomp.over(socket);
-      stompClient.current.connect(
-        {},
-        (frame) => {
-          console.log("연결성공: " + frame);
-
-          fetchUserInfo(token, chatRoom.chatRoomId);
-
-          stompClient.current.subscribe(
-            `/topic/groupChatRoom/${chatRoom.chatRoomId}`,
-            (message) => {
-              const newMessage = JSON.parse(message.body);
-              console.log("메세지가 전달되었습니다:", newMessage);
-              setMessages((prevMessages) => [...prevMessages, newMessage]);
-            }
-          );
-
-          stompClient.current.send(
-            `/app/chat.addUser/${chatRoom.chatRoomId}`,
-            {},
-            JSON.stringify({ sender: nickname, userId })
-          );
-        },
-        (error) => {
-          console.error("웹소켓 연결에 실패하였습니다.", error);
-        }
-      );
-    };
-
-    if (chatRoom && nickname && userId) {
+    if (chatRoom && nickname && userId && isJoined) {
       connect();
     }
 
@@ -114,7 +137,7 @@ const ChatDisplay = ({ chatRoom, onLeave }) => {
         });
       }
     };
-  }, [chatRoom, nickname, userId]);
+  }, [chatRoom, nickname, userId, isJoined]);
 
   const sendMessage = () => {
     if (stompClient.current && message.trim() !== "") {
@@ -125,7 +148,6 @@ const ChatDisplay = ({ chatRoom, onLeave }) => {
         userId: userId,
         chatRoomId: chatRoom.chatRoomId,
       };
-      console.log("메세지를 보내고 있습니다:", chatMessage);
       stompClient.current.send(
         `/app/chat.sendMessage/${chatRoom.chatRoomId}`,
         {},
@@ -136,7 +158,6 @@ const ChatDisplay = ({ chatRoom, onLeave }) => {
       console.error("STOMP client 연결에 실패하였습니다.");
     }
   };
-
 
   const handleDeleteMessage = async () => {
     const token = Cookies.get("accessToken");
@@ -157,7 +178,6 @@ const ChatDisplay = ({ chatRoom, onLeave }) => {
       );
 
       if (response.ok) {
-        console.log("메세지를 삭제했습니다.");
         setMessages((prevMessages) =>
           prevMessages.filter((msg) => msg.chatId !== selectedMessage)
         );
@@ -189,7 +209,6 @@ const ChatDisplay = ({ chatRoom, onLeave }) => {
       );
 
       if (response.ok) {
-        console.log("사용자가 채팅방에서 나갔습니다.");
         if (stompClient.current) {
           stompClient.current.disconnect(() => {
             console.log("연결이 종료되었습니다.");
@@ -200,7 +219,10 @@ const ChatDisplay = ({ chatRoom, onLeave }) => {
         console.error("사용자를 채팅방에서 제거하는 데 실패했습니다.");
       }
     } catch (error) {
-      console.error("사용자를 채팅방에서 제거하는 중 오류가 발생했습니다:", error);
+      console.error(
+        "사용자를 채팅방에서 제거하는 중 오류가 발생했습니다.",
+        error
+      );
     }
   };
 
@@ -210,6 +232,42 @@ const ChatDisplay = ({ chatRoom, onLeave }) => {
       sendMessage();
     }
   }, 300);
+
+  const confirmJoinChatRoom = async () => {
+    setShowJoinModal(false);
+    const token = Cookies.get("accessToken");
+    const payload = {
+      nickname,
+      password: "",
+    };
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/chat/users/join/${chatRoom.chatRoomId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("유저가 들어왔습니다:", data);
+        setUserId(data.userId);
+        setIsJoined(true);
+        fetchUserInfo(token, chatRoom.chatRoomId);
+        fetchMessages(token, chatRoom.chatRoomId);
+        connect();
+      } else {
+        console.error("채팅방 참여에 실패하였습니다.");
+      }
+    } catch (error) {
+      console.error("채팅방 참여 중 오류가 발생했습니다.:", error);
+    }
+  };
 
   return (
     <div className="chat-display">
@@ -224,9 +282,20 @@ const ChatDisplay = ({ chatRoom, onLeave }) => {
               }
             }}
           >
-            <div className="chat-display__content">
+            <div
+              className={`chat-display__content ${
+                msg.type === "JOIN" || msg.type === "LEAVE"
+                  ? "system-message"
+                  : msg.userId === userId
+                  ? "my-message"
+                  : "other-message"
+              }`}
+            >
+              {console.log(
+                `Message Type: ${msg.type}, Content: ${msg.content}`
+              )}
               {msg.type === "JOIN" || msg.type === "LEAVE" ? (
-                msg.content
+                <div>{msg.content}</div>
               ) : (
                 <>
                   <strong>{msg.sender}</strong>: {msg.content}
@@ -238,16 +307,13 @@ const ChatDisplay = ({ chatRoom, onLeave }) => {
       </div>
       <div>
         <div className="chat-display__holder">
-          <div>
+          <div className="chat-display__wrapper">
             <input
               className="chat-display__input"
               type="text"
               placeholder="메시지 입력"
               value={message}
-              onChange={(e) => {
-                console.log("Message input value:", e.target.value);
-                setMessage(e.target.value);
-              }}
+              onChange={(e) => setMessage(e.target.value)}
               onKeyDown={handleKeyDown}
             />
           </div>
@@ -293,6 +359,16 @@ const ChatDisplay = ({ chatRoom, onLeave }) => {
             <p>삭제하시겠습니까?</p>
             <button onClick={handleDeleteMessage}>예</button>
             <button onClick={() => setShowDeleteModal(false)}>아니요</button>
+          </div>
+        </div>
+      )}
+
+      {showJoinModal && (
+        <div className="modal">
+          <div className="modal-content">
+            <p>채팅방에 참여하시겠습니까?</p>
+            <button onClick={confirmJoinChatRoom}>예</button>
+            <button onClick={() => setShowJoinModal(false)}>아니요</button>
           </div>
         </div>
       )}

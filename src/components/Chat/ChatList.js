@@ -12,7 +12,6 @@ const ChatList = ({ onSelectChatRoom }) => {
   const [showJoinModal, setShowJoinModal] = useState(false);
   const [nickname, setNickname] = useState("");
   const [password, setPassword] = useState("");
-  const [isJoined, setIsJoined] = useState(false);
 
   useEffect(() => {
     const fetchChatRooms = async () => {
@@ -54,7 +53,7 @@ const ChatList = ({ onSelectChatRoom }) => {
 
     try {
       const response = await fetch(
-        `/api/chat/users/${chatRoom.chatRoomId}/isParticipant`,
+        `/api/chat/users/${chatRoom.chatRoomId}/isActive`,
         {
           method: "GET",
           headers: {
@@ -66,12 +65,11 @@ const ChatList = ({ onSelectChatRoom }) => {
 
       if (response.ok) {
         const data = await response.json();
-        if (data.isJoined) {
+        if (data.isActive) {
           setSelectedChatRoom(chatRoom);
-          setIsJoined(true);
           onSelectChatRoom(chatRoom); // 채팅방 선택에 따라 바뀜
         } else {
-          setSelectedChatRoom(null);
+          setSelectedChatRoom(chatRoom);
           setShowJoinModal(true);
         }
       } else {
@@ -99,7 +97,6 @@ const ChatList = ({ onSelectChatRoom }) => {
       );
 
       if (response.ok) {
-        setIsJoined(true);
         setShowJoinModal(false);
         onSelectChatRoom(selectedChatRoom); 
       } else {
