@@ -22,3 +22,23 @@
 .chat-member__ul{
     padding: 0;
 }
+
+.chat-member__leave-button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    cursor: pointer;
+  }
+
+  .chat-member__leave-button {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  .chat-member__leave-button:hover {
+    background-color: #ff1a1a;
+  }

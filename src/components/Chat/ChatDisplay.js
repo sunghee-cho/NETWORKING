@@ -10,7 +10,6 @@ const ChatDisplay = ({ chatRoom, onLeave }) => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [userId, setUserId] = useState(null);
-  const [showLeaveModal, setShowLeaveModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedMessage, setSelectedMessage] = useState(null);
   const [showJoinModal, setShowJoinModal] = useState(false);
@@ -190,42 +189,6 @@ const ChatDisplay = ({ chatRoom, onLeave }) => {
     }
   };
 
-  const handleLeave = async () => {
-    const token = Cookies.get("accessToken");
-    if (!token) {
-      console.error("저장된 토큰이 없습니다.");
-      return;
-    }
-
-    try {
-      const response = await fetch(
-        `http://localhost:8080/api/chat/users/room/${chatRoom.chatRoomId}/user/${userId}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (response.ok) {
-        if (stompClient.current) {
-          stompClient.current.disconnect(() => {
-            console.log("연결이 종료되었습니다.");
-          });
-        }
-        onLeave();
-      } else {
-        console.error("사용자를 채팅방에서 제거하는 데 실패했습니다.");
-      }
-    } catch (error) {
-      console.error(
-        "사용자를 채팅방에서 제거하는 중 오류가 발생했습니다.",
-        error
-      );
-    }
-  };
-
   const handleKeyDown = debounce((e) => {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -305,53 +268,35 @@ const ChatDisplay = ({ chatRoom, onLeave }) => {
           </div>
         ))}
       </div>
-      <div>
-        <div className="chat-display__holder">
-          <div className="chat-display__wrapper">
-            <input
-              className="chat-display__input"
-              type="text"
-              placeholder="메시지 입력"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              onKeyDown={handleKeyDown}
-            />
-          </div>
-          <button className="chat-display__button" onClick={sendMessage}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="32"
-              height="32"
-              viewBox="0 0 32 32"
-              className="icon-2xl"
-            >
-              <circle cx="16" cy="16" r="16" fill="black" />
-              <path
-                fill="white"
-                fillRule="evenodd"
-                d="M15.192 8.906a1.143 1.143 0 0 1 1.616 0l5.143 5.143a1.143 1.143 0 0 1-1.616 1.616l-3.192-3.192v9.813a1.143 1.143 0 0 1-2.286 0v-9.813l-3.192 3.192a1.143 1.143 0 1 1-1.616-1.616z"
-                clipRule="evenodd"
-              ></path>
-            </svg>
-          </button>
+      <div className="chat-display__holder">
+        <div className="chat-display__wrapper">
+          <input
+            className="chat-display__input"
+            type="text"
+            placeholder="메시지 입력"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            onKeyDown={handleKeyDown}
+          />
         </div>
-        <button
-          className="chat-display__leave-button"
-          onClick={() => setShowLeaveModal(true)}
-        >
-          나가기
+        <button className="chat-display__button" onClick={sendMessage}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="32"
+            height="32"
+            viewBox="0 0 32 32"
+            className="icon-2xl"
+          >
+            <circle cx="16" cy="16" r="16" fill="black" />
+            <path
+              fill="white"
+              fillRule="evenodd"
+              d="M15.192 8.906a1.143 1.143 0 0 1 1.616 0l5.143 5.143a1.143 1.143 0 0 1-1.616 1.616l-3.192-3.192v9.813a1.143 1.143 0 0 1-2.286 0v-9.813l-3.192 3.192a1.143 1.143 0 1 1-1.616-1.616z"
+              clipRule="evenodd"
+            ></path>
+          </svg>
         </button>
       </div>
-
-      {showLeaveModal && (
-        <div className="modal">
-          <div className="modal-content">
-            <p>채팅을 나가시겠습니까?</p>
-            <button onClick={handleLeave}>예</button>
-            <button onClick={() => setShowLeaveModal(false)}>아니요</button>
-          </div>
-        </div>
-      )}
 
       {showDeleteModal && (
         <div className="modal">

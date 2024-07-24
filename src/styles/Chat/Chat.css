@@ -1,14 +1,23 @@
 .chat__container {
   display: flex;
-  justify-content: space-evenly;
+  border-top: 0.125rem solid #E0E0E0;
+  border-bottom: 0.125rem solid #E0E0E0;
 }
 
 .chat__box {
   padding: 1.5rem;
-  border: 0.1rem solid black;
-  border-radius: 1rem;
-}
+ }
 
 .chat__box--display{
   width: 700px;
+}
+
+.chat__box--list {
+  border-right: 0.125rem solid #E0E0E0;
+  padding: 2rem 0;
+  width: 23%;
+}
+
+.chat__box--member {
+  border-left: 0.125rem solid #E0E0E0;
 }

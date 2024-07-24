@@ -18,6 +18,9 @@ public class ChatRoom {
     @Column(name = "room_name", nullable = false, length = 255)
     private String roomName;
 
+    @Column(name = "hashtag", length = 255)
+    private String hashtag;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "chat_type", nullable = false, length = 255)
     private MessageType chatType;
@@ -57,6 +60,14 @@ public class ChatRoom {
 
     public void setRoomName(String roomName) {
         this.roomName = roomName;
+    }
+
+    public String getHashtag() {
+        return hashtag;
+    }
+
+    public void setHashtag(String hashtag) {
+        this.hashtag = hashtag;
     }
 
     public MessageType getChatType() {

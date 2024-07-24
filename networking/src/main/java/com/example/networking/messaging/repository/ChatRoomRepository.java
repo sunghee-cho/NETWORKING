@@ -10,4 +10,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
     List<ChatRoom> findByChatType(MessageType chatType); // 채팅방 타입으로 채팅방 찾기
+
 }

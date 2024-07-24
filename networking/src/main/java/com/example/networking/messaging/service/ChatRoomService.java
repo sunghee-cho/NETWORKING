@@ -17,6 +17,11 @@ public class ChatRoomService {
 
     // 채팅방 만들기
     public ChatRoom createChatRoom(ChatRoom chatRoom) {
+        if (chatRoom.getPassword() != null && !chatRoom.getPassword().isEmpty()) {
+            chatRoom.setSecret(true);
+        } else {
+            chatRoom.setSecret(false);
+        }
         return chatRoomRepository.save(chatRoom);
     }
 
@@ -27,13 +32,19 @@ public class ChatRoomService {
 
     // 채팅방 정보 업데이트하기 
     public ChatRoom updateChatRoom(ChatRoom chatRoom) {
+        if (chatRoom.getPassword() != null && !chatRoom.getPassword().isEmpty()) {
+            chatRoom.setSecret(true);
+        } else {
+            chatRoom.setSecret(false);
+        }
         return chatRoomRepository.save(chatRoom);
     }
 
-    // 모든 그룹채팅창 찾기 
+    // 모든 그룹채팅방 찾기 
     public List<ChatRoom> getAllGroupChatRooms() {
         return chatRoomRepository.findByChatType(MessageType.GROUP_CHAT);
     }
+
 
     // 채팅방 id로 비밀채팅방 찾기 
     public Optional<ChatRoom> getSecretChatRoomById(Long chatRoomId, String password) {

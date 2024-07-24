@@ -17,25 +17,25 @@ const Chat = () => {
 
   return (
     <main className="chat">
-      <div className="chat__container">
-        <div className="chat__box">
+      <section className="chat__container">
+        <article className="chat__box chat__box--list">
           <ChatList onSelectChatRoom={handleSelectChatRoom} />
-        </div>
+        </article>
         {selectedChatRoom && (
           <>
-            <div className="chat__box chat__box--display">
+            <article className="chat__box chat__box--display">
               <ChatDisplay
                 key={selectedChatRoom.chatRoomId}
                 chatRoom={selectedChatRoom}
                 onLeave={handleLeaveChatRoom}
               />
-            </div>
-            <div className="chat__box">
-              <ChatMember chatRoom={selectedChatRoom} />
-            </div>
+            </article>
+            <article className="chat__box chat__box--member">
+              <ChatMember chatRoom={selectedChatRoom} onLeave={handleLeaveChatRoom} />
+            </article>
           </>
         )}
-      </div>
+      </section>
     </main>
   );
 };

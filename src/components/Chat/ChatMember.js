@@ -3,9 +3,10 @@ import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import profilePic from "../../assets/images/고양이 프로필.png";
 
-const ChatMember = ({ chatRoom }) => {
+const ChatMember = ({ chatRoom, onLeave }) => {
   const [members, setMembers] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
+  const [showLeaveModal, setShowLeaveModal] = useState(false);
 
   useEffect(() => {
     const fetchChatMembers = async () => {
@@ -48,6 +49,37 @@ const ChatMember = ({ chatRoom }) => {
     }
   }, [chatRoom]);
 
+  const handleLeave = async () => {
+    const token = Cookies.get("accessToken");
+    if (!token) {
+      console.error("저장된 토큰이 없습니다.");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/chat/users/room/${chatRoom.chatRoomId}/user/${currentUser.userId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.ok) {
+        onLeave();
+      } else {
+        console.error("사용자를 채팅방에서 제거하는 데 실패했습니다.");
+      }
+    } catch (error) {
+      console.error(
+        "사용자를 채팅방에서 제거하는 중 오류가 발생했습니다.",
+        error
+      );
+    }
+  };
+
   return (
     <div>
       <ul className="chat-member__list">
@@ -61,7 +93,9 @@ const ChatMember = ({ chatRoom }) => {
                 style={{ borderRadius: "50%", marginRight: "10px" }}
               />
             </div>
-            <div className="chat-member__nickname">{currentUser.nickname}</div>
+            <div className="chat-member__nickname">
+              {currentUser.nickname}
+            </div>
           </li>
         )}
       </ul>
@@ -86,6 +120,22 @@ const ChatMember = ({ chatRoom }) => {
             </li>
           ))}
       </ul>
+      <button
+        className="chat-member__leave-button"
+        onClick={() => setShowLeaveModal(true)}
+      >
+        나가기
+      </button>
+
+      {showLeaveModal && (
+        <div className="modal">
+          <div className="modal-content">
+            <p>채팅을 나가시겠습니까?</p>
+            <button onClick={handleLeave}>예</button>
+            <button onClick={() => setShowLeaveModal(false)}>아니요</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

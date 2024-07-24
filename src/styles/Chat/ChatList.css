@@ -1,0 +1,38 @@
+.chat-list__group {
+  display: flex;
+  gap: 1rem;
+  margin-left: 2.5rem;
+}
+
+
+.chat-list__button {
+  border: none;
+  border-radius: 0.313rem;
+  background-color: black;
+  color: white;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+.chat-list__u-list {
+  list-style-type: none;
+  max-height: 500px; 
+  overflow-y: auto;
+  margin: 2rem 0;
+  padding: 0;
+}
+
+.chat-list__list {
+  margin-top: 2rem;
+}
+
+.chat-list__line {
+  padding: 1rem 0;
+  border-bottom: 0.125rem solid #e0e0e0;
+}
+
+.chat-room-hashtag {
+  display: inline-block;
+  margin-right: 5px;
+  color: #6c757d; 
+}
