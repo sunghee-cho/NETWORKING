@@ -63,7 +63,7 @@ public class SecurityConfig {
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                 .requestMatchers("/", "/login", "/users/**").permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
-                .requestMatchers("/chat/**", "/api/chat/rooms/**").authenticated() // 웹소켓 endpoint 추가 **새로 업데이트**
+                .requestMatchers("/chat/**", "/api/chat/**","/api/chat/rooms/**", "/api/chat/messages/**").authenticated() 
                 .anyRequest().authenticated()
                 .and()
         );

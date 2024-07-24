@@ -1,13 +1,13 @@
 package com.example.networking.messaging.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-
 
 @Entity
 @Table(name = "Chats")
 public class Chat {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "chat_id")
@@ -28,11 +28,19 @@ public class Chat {
     @Column(name = "read_status")
     private Boolean readStatus;
 
+    @Column(name = "is_deleted", nullable = false)
+    private Boolean isDeleted = false;
+
     @Column(name = "created_at", updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private LocalDateTime updatedAt;
+
+    @ManyToOne
+    @JoinColumn(name = "chat_room_id", insertable = false, updatable = false)
+    @JsonBackReference
+    private ChatRoom chatRoom;
 
     // Getters and Setters
     public Long getChatId() {
@@ -75,6 +83,14 @@ public class Chat {
         this.nickname = nickname;
     }
 
+    public Boolean getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(Boolean isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
     public Boolean getReadStatus() {
         return readStatus;
     }
@@ -97,5 +113,13 @@ public class Chat {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public ChatRoom getChatRoom() {
+        return chatRoom;
+    }
+
+    public void setChatRoom(ChatRoom chatRoom) {
+        this.chatRoom = chatRoom;
     }
 }

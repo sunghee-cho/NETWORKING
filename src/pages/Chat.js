@@ -11,6 +11,10 @@ const Chat = () => {
     setSelectedChatRoom(chatRoom);
   };
 
+  const handleLeaveChatRoom = () => {
+    setSelectedChatRoom(null);
+  };
+
   return (
     <main className="chat">
       <div className="chat__container">
@@ -23,6 +27,7 @@ const Chat = () => {
               <ChatDisplay
                 key={selectedChatRoom.chatRoomId}
                 chatRoom={selectedChatRoom}
+                onLeave={handleLeaveChatRoom}
               />
             </div>
             <div className="chat__box">

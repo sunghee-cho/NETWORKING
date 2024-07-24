@@ -1,5 +1,6 @@
 package com.example.networking.messaging.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
@@ -7,6 +8,7 @@ import java.time.LocalDateTime;
 @Table(name = "ChatParticipants")
 @IdClass(ChatUserId.class)
 public class ChatUser {
+    
     @Id
     @Column(name = "chat_room_id")
     private Long chatRoomId;
@@ -23,6 +25,11 @@ public class ChatUser {
 
     @Column(name = "updated_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private LocalDateTime updatedAt;
+
+    @ManyToOne
+    @JoinColumn(name = "chat_room_id", insertable = false, updatable = false)
+    @JsonBackReference
+    private ChatRoom chatRoom;
 
     // Getters and Setters
     public Long getChatRoomId() {
@@ -63,5 +70,13 @@ public class ChatUser {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public ChatRoom getChatRoom() {
+        return chatRoom;
+    }
+
+    public void setChatRoom(ChatRoom chatRoom) {
+        this.chatRoom = chatRoom;
     }
 }

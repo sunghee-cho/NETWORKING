@@ -5,11 +5,14 @@ import { Stomp } from "@stomp/stompjs";
 import Cookies from "js-cookie";
 import debounce from "lodash.debounce";
 
-const ChatDisplay = ({ chatRoom }) => {
+const ChatDisplay = ({ chatRoom, onLeave }) => {
   const [nickname, setNickname] = useState("");
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [userId, setUserId] = useState(null);
+  const [showLeaveModal, setShowLeaveModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedMessage, setSelectedMessage] = useState(null);
   const stompClient = useRef(null);
 
   const fetchUserInfo = async (token, chatRoomId) => {
@@ -42,11 +45,11 @@ const ChatDisplay = ({ chatRoom }) => {
         }
       );
       const data = await response.json();
-      console.log("불러온 메세지:", data); 
+      console.log("불러온 메세지:", data);
       const normalizedMessages = data.map((msg) => ({
         ...msg,
         content: msg.message,
-        sender: msg.nickname, 
+        sender: msg.nickname,
       }));
       setMessages(normalizedMessages);
     } catch (error) {
@@ -134,6 +137,73 @@ const ChatDisplay = ({ chatRoom }) => {
     }
   };
 
+
+  const handleDeleteMessage = async () => {
+    const token = Cookies.get("accessToken");
+    if (!token) {
+      console.error("저장된 토큰이 없습니다.");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/chat/messages/${selectedMessage}/soft-delete`,
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.ok) {
+        console.log("메세지를 삭제했습니다.");
+        setMessages((prevMessages) =>
+          prevMessages.filter((msg) => msg.chatId !== selectedMessage)
+        );
+        setShowDeleteModal(false);
+      } else {
+        console.error("메세지를 삭제하는 데 실패했습니다.");
+      }
+    } catch (error) {
+      console.error("메세지를 삭제하는 중 오류가 발생했습니다:", error);
+    }
+  };
+
+  const handleLeave = async () => {
+    const token = Cookies.get("accessToken");
+    if (!token) {
+      console.error("저장된 토큰이 없습니다.");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/chat/users/room/${chatRoom.chatRoomId}/user/${userId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.ok) {
+        console.log("사용자가 채팅방에서 나갔습니다.");
+        if (stompClient.current) {
+          stompClient.current.disconnect(() => {
+            console.log("연결이 종료되었습니다.");
+          });
+        }
+        onLeave();
+      } else {
+        console.error("사용자를 채팅방에서 제거하는 데 실패했습니다.");
+      }
+    } catch (error) {
+      console.error("사용자를 채팅방에서 제거하는 중 오류가 발생했습니다:", error);
+    }
+  };
+
   const handleKeyDown = debounce((e) => {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -145,7 +215,15 @@ const ChatDisplay = ({ chatRoom }) => {
     <div className="chat-display">
       <div className="chat-display__msg">
         {messages.map((msg, index) => (
-          <div key={index}>
+          <div
+            key={index}
+            onClick={() => {
+              if (msg.userId === userId) {
+                setSelectedMessage(msg.chatId);
+                setShowDeleteModal(true);
+              }
+            }}
+          >
             <div className="chat-display__content">
               {msg.type === "JOIN" || msg.type === "LEAVE" ? (
                 msg.content
@@ -191,7 +269,33 @@ const ChatDisplay = ({ chatRoom }) => {
             </svg>
           </button>
         </div>
+        <button
+          className="chat-display__leave-button"
+          onClick={() => setShowLeaveModal(true)}
+        >
+          나가기
+        </button>
       </div>
+
+      {showLeaveModal && (
+        <div className="modal">
+          <div className="modal-content">
+            <p>채팅을 나가시겠습니까?</p>
+            <button onClick={handleLeave}>예</button>
+            <button onClick={() => setShowLeaveModal(false)}>아니요</button>
+          </div>
+        </div>
+      )}
+
+      {showDeleteModal && (
+        <div className="modal">
+          <div className="modal-content">
+            <p>삭제하시겠습니까?</p>
+            <button onClick={handleDeleteMessage}>예</button>
+            <button onClick={() => setShowDeleteModal(false)}>아니요</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

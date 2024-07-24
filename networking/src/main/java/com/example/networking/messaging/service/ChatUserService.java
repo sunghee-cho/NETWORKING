@@ -1,13 +1,19 @@
 package com.example.networking.messaging.service;
 
 import com.example.networking.messaging.entity.ChatUser;
+import com.example.networking.messaging.model.ChatMessage;
 import com.example.networking.messaging.entity.ChatRoom;
 import com.example.networking.messaging.repository.ChatUserRepository;
 import com.example.networking.messaging.repository.ChatRoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import com.example.networking.messaging.service.ChatService;
 
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class ChatUserService {
@@ -17,6 +23,16 @@ public class ChatUserService {
 
     @Autowired
     private ChatRoomRepository chatRoomRepository;
+
+
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
+
+    @Autowired
+    private ChatService chatService;
+
+    @SuppressWarnings("unused")
+    private static final Logger logger = LoggerFactory.getLogger(ChatUserService.class);
 
     // 채팅방에 유저 추가하기
     public ChatUser addUserToChatRoom(ChatUser chatUser) {
@@ -29,9 +45,23 @@ public class ChatUserService {
     }
 
     // 채팅방 & 유저 id로 유저 삭제하기 
+    @Transactional
     public void removeUserFromChatRoom(Long chatRoomId, Integer userId) {
+        String nickname = chatUserRepository.findNicknameByUserIdAndChatRoomId(userId, chatRoomId);
         chatUserRepository.deleteByChatRoomIdAndUserId(chatRoomId, userId);
+    
+        ChatMessage chatMessage = new ChatMessage();
+        chatMessage.setType(ChatMessage.MessageType.LEAVE);
+        chatMessage.setSender(nickname);
+        chatMessage.setContent(nickname + " 님이 나갔습니다.");
+        chatMessage.setUserId(userId);
+        chatMessage.setChatRoomId(chatRoomId);
+    
+        chatService.saveMessage(chatMessage);
+    
+        messagingTemplate.convertAndSend("/topic/groupChatRoom/" + chatRoomId, chatMessage);
     }
+    
 
     // 채팅방에 참여된 유저인지 확인하기
     public boolean isUserParticipant(Long chatRoomId, Integer userId) {

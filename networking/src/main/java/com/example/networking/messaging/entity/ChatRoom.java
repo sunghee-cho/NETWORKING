@@ -1,13 +1,15 @@
 package com.example.networking.messaging.entity;
+
 import com.example.networking.messaging.model.ChatMessage.MessageType;
-
-
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "ChatRooms")
 public class ChatRoom {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "chat_room_id")
@@ -31,6 +33,14 @@ public class ChatRoom {
 
     @Column(name = "updated_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private LocalDateTime updatedAt;
+
+    @OneToMany(mappedBy = "chatRoom")
+    @JsonManagedReference
+    private List<ChatUser> participants;
+
+    @OneToMany(mappedBy = "chatRoom")
+    @JsonManagedReference
+    private List<Chat> chats;
 
     // Getters and Setters
     public Long getChatRoomId() {
@@ -87,5 +97,21 @@ public class ChatRoom {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public List<ChatUser> getParticipants() {
+        return participants;
+    }
+
+    public void setParticipants(List<ChatUser> participants) {
+        this.participants = participants;
+    }
+
+    public List<Chat> getChats() {
+        return chats;
+    }
+
+    public void setChats(List<Chat> chats) {
+        this.chats = chats;
     }
 }

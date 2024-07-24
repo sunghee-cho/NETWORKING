@@ -46,4 +46,11 @@ public class ChatMessageController {
         return updatedChat.map(ResponseEntity::ok)
                           .orElseGet(() -> ResponseEntity.notFound().build());
     }
+
+    // 메세지 삭제하기
+    @PatchMapping("/{chatId}/soft-delete")
+    public ResponseEntity<Void> softDeleteMessage(@PathVariable Long chatId) {
+        chatService.softDeleteMessage(chatId);
+        return ResponseEntity.noContent().build();
+    }
 }
