@@ -65,4 +65,5 @@ public class ChatController {
         chatMessage.setType(ChatMessage.MessageType.JOIN);
         return chatMessage;
     }
+
 }

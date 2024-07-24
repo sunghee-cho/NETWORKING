@@ -100,8 +100,17 @@ public class ChatUserService {
         chatUserRepository.save(participant);
     }
 
+    // 채팅방 & 유저 id로 active 상태 확인하기 
     public boolean isUserActive(Long chatRoomId, Integer userId) {
         Optional<ChatUser> chatUser = chatUserRepository.findByChatRoomIdAndUserIdAndIsActiveTrue(chatRoomId, userId);
         return chatUser.isPresent();
+    }
+
+    // 유저 id가 null이면 채팅방 삭제하기
+    public void leaveChatRoom(Long chatRoomId, Integer userId) {
+        ChatUser chatUser = chatUserRepository.findByChatRoomIdAndUserId(chatRoomId, userId);
+        if (chatUser != null) {
+            chatUserRepository.delete(chatUser);
+        }
     }
 }

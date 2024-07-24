@@ -45,7 +45,6 @@ public class ChatRoomService {
         return chatRoomRepository.findByChatType(MessageType.GROUP_CHAT);
     }
 
-
     // 채팅방 id로 비밀채팅방 찾기 
     public Optional<ChatRoom> getSecretChatRoomById(Long chatRoomId, String password) {
         Optional<ChatRoom> chatRoom = chatRoomRepository.findById(chatRoomId);
@@ -65,5 +64,10 @@ public class ChatRoomService {
     public boolean validateChatRoomPassword(Long chatRoomId, String password) {
         Optional<ChatRoom> chatRoom = chatRoomRepository.findById(chatRoomId);
         return chatRoom.isPresent() && chatRoom.get().getPassword().equals(password);
+    }
+    
+    // 유저가 참여한 모든 채팅방 찾기
+    public List<ChatRoom> getChatRoomsByUserId(Integer userId) {
+        return chatRoomRepository.findByUserId(userId);
     }
 }

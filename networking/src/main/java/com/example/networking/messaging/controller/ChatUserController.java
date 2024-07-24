@@ -95,6 +95,7 @@ public class ChatUserController {
         return Integer.parseInt(userIdString);
     }
     
+    // active 상태 확인하기 
     @GetMapping("/{chatRoomId}/isActive")
     public ResponseEntity<?> isUserActive(@PathVariable Long chatRoomId, @RequestHeader("Authorization") String token) {
         Integer userId = getUserIdFromToken(token);
@@ -104,5 +105,10 @@ public class ChatUserController {
         return ResponseEntity.ok(response);
     }
 
-    
+    // 채팅방 삭제하기
+    @PostMapping("/leave/{chatRoomId}")
+    public ResponseEntity<Void> leaveChatRoom(@PathVariable Long chatRoomId, @RequestParam Integer userId) {
+        chatUserService.leaveChatRoom(chatRoomId, userId);
+        return ResponseEntity.ok().build();
+}
 }

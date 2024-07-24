@@ -53,4 +53,11 @@ public class ChatRoomController {
         List<ChatRoom> chatRooms = chatRoomService.getAllGroupChatRooms();
         return ResponseEntity.ok(chatRooms);
     }
+
+    // 유저가 참여한 모든 채팅방 찾기
+    @GetMapping("/my")
+    public ResponseEntity<List<ChatRoom>> getChatRoomsByUserId(@RequestParam Integer userId) {
+        List<ChatRoom> chatRooms = chatRoomService.getChatRoomsByUserId(userId);
+        return ResponseEntity.ok(chatRooms);
+    }
 }

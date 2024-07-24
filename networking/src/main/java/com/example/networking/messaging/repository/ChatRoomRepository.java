@@ -2,6 +2,8 @@ package com.example.networking.messaging.repository;
 
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import com.example.networking.messaging.entity.ChatRoom;
 import com.example.networking.messaging.model.ChatMessage.MessageType;
 import org.springframework.stereotype.Repository;
@@ -10,5 +12,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
     List<ChatRoom> findByChatType(MessageType chatType); // 채팅방 타입으로 채팅방 찾기
+
+    @Query("SELECT cr FROM ChatRoom cr JOIN cr.participants p WHERE p.userId = :userId")
+    List<ChatRoom> findByUserId(@Param("userId") Integer userId);
 
 }
