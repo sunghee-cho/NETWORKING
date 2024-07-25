@@ -1,5 +1,6 @@
 .chat__container {
   display: flex;
+  justify-content: space-between;
   border-top: 0.125rem solid #E0E0E0;
   border-bottom: 0.125rem solid #E0E0E0;
 }
@@ -10,14 +11,17 @@
 
 .chat__box--display{
   width: 700px;
+  max-height: 40rem;
 }
 
 .chat__box--list {
   border-right: 0.125rem solid #E0E0E0;
-  padding: 2rem 0;
+  padding: 1rem 0;
   width: 23%;
 }
 
 .chat__box--member {
   border-left: 0.125rem solid #E0E0E0;
+  width: 15%;
+  padding: 0;
 }

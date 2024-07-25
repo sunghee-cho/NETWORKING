@@ -11,7 +11,7 @@ const Header = () => {
   return (
     <header className="header">
       <div className="logo">
-        NET<span>WORKING</span>
+        NET<span className="logo-span">WORKING</span>
       </div> 
       <nav>
         <NavLink exact to="/" activeClassName="active">

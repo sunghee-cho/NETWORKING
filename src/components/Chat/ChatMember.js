@@ -93,33 +93,33 @@ const ChatMember = ({ chatRoom, onLeave }) => {
                 style={{ borderRadius: "50%", marginRight: "10px" }}
               />
             </div>
-            <div className="chat-member__nickname">
-              {currentUser.nickname}
-            </div>
+            <div className="chat-member__nickname">{currentUser.nickname}</div>
           </li>
         )}
       </ul>
-      <hr />
-      <div>
-        <p>참여 {members.length}명</p>{" "}
+      <div className="chat-member__line"></div>
+      <div className="chat-member__group">
+        <div>
+          <p className="chat-member__count">참여 {members.length}명</p>{" "}
+        </div>
+        <ul className="chat-member__ul">
+          {members
+            .filter((member) => member.userId !== currentUser?.userId)
+            .map((member) => (
+              <li className="chat-member__holder" key={member.userId}>
+                <div>
+                  <img
+                    className="chat-member__pic"
+                    src={profilePic}
+                    alt="프로필사진"
+                    style={{ borderRadius: "50%", marginRight: "10px" }}
+                  />
+                </div>
+                <div className="chat-member__nickname">{member.nickname}</div>
+              </li>
+            ))}
+        </ul>
       </div>
-      <ul className="chat-member__ul">
-        {members
-          .filter((member) => member.userId !== currentUser?.userId)
-          .map((member) => (
-            <li className="chat-member__holder" key={member.userId}>
-              <div>
-                <img
-                  className="chat-member__pic"
-                  src={profilePic}
-                  alt="프로필사진"
-                  style={{ borderRadius: "50%", marginRight: "10px" }}
-                />
-              </div>
-              <div className="chat-member__nickname">{member.nickname}</div>
-            </li>
-          ))}
-      </ul>
       <button
         className="chat-member__leave-button"
         onClick={() => setShowLeaveModal(true)}
@@ -128,11 +128,20 @@ const ChatMember = ({ chatRoom, onLeave }) => {
       </button>
 
       {showLeaveModal && (
-        <div className="modal">
-          <div className="modal-content">
-            <p>채팅을 나가시겠습니까?</p>
-            <button onClick={handleLeave}>예</button>
-            <button onClick={() => setShowLeaveModal(false)}>아니요</button>
+        <div className="chat-member__modal">
+          <div className="chat-member__modal-content">
+            <h3 className="chat-member__title">채팅방을 나가시겠습니까?</h3>
+            <div className="chat-member__modal-wrapper">
+              <button className="chat-member__button" onClick={handleLeave}>
+                예
+              </button>
+              <button
+                className="chat-member__button"
+                onClick={() => setShowLeaveModal(false)}
+              >
+                아니요
+              </button>
+            </div>
           </div>
         </div>
       )}

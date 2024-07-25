@@ -1,38 +1,115 @@
 .chat-list__group {
   display: flex;
-  gap: 1rem;
-  margin-left: 2.5rem;
+  justify-content: space-evenly;
 }
-
 
 .chat-list__button {
   border: none;
-  border-radius: 0.313rem;
-  background-color: black;
-  color: white;
   padding: 0.5rem 1rem;
   cursor: pointer;
+  box-shadow: inset 0 0 0 0 #ff7900;
+  color: #ff7900;
+  font-weight: bold;
+  font-size: 0.9rem;
+  margin: 0 -.25rem;
+  transition: color .3s ease-in-out, box-shadow .3s ease-in-out;
+}
+
+.chat-list__button:hover {
+  box-shadow: inset 7.5rem 0 0 0 #ff7900;
+  color: white;
 }
 
 .chat-list__u-list {
   list-style-type: none;
-  max-height: 500px; 
+  max-height: 40rem;
   overflow-y: auto;
-  margin: 2rem 0;
   padding: 0;
+  margin: 0;
 }
 
 .chat-list__list {
-  margin-top: 2rem;
+  padding-top: 1rem;
+  cursor: pointer;
+}
+
+.chat-list__list:hover {
+  box-shadow: inset 7.5rem 0 0 0 #dee2e6;
+  background-color: #dee2e6;
+}
+
+.chat-list__list:checked{
+  background-color: #dee2e6;
+}
+
+.chat-list__list.selected {
+  background-color: #dee2e6; 
 }
 
 .chat-list__line {
-  padding: 1rem 0;
+  padding: 0.5rem 0;
   border-bottom: 0.125rem solid #e0e0e0;
+}
+
+.chat-room-name {
+  padding-left: 2rem;
+  margin-bottom: 0.25rem;
+  font-size: 1rem;
 }
 
 .chat-room-hashtag {
   display: inline-block;
-  margin-right: 5px;
-  color: #6c757d; 
+  margin-right: 0.313rem;
+  color: #6c757d;
+  padding-left: 2rem;
+  font-size: 0.85rem;
+}
+
+.chat-list__modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 1.875rem;
+  border: 0.063rem solid #ccc;
+  z-index: 1000;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.2);
+}
+
+.chat-list__title {
+  color: #495057;
+}
+
+.chat-list__wrapper--pw {
+  margin-bottom: 1rem;
+}
+
+.chat-list__subtitle {
+  font-size: 0.95rem;
+  color: #495057;
+}
+
+.chat-list__input {
+  border: none;
+  border-bottom: 0.1rem solid black;
+  padding-bottom: 0.25rem;
+  width: 12rem;
+  height: 1.25rem;
+}
+
+.chat-list__button--join {
+  border: none;
+  border-radius: 0.25rem;
+  padding: 0.5rem 1rem;
+  background-color: black;
+  color: #ffff;
+  font-weight: 600;
+  font-size: 0.85rem;
+  margin: 1.5rem 0;
+  cursor: pointer;
+}
+
+.chat-list__button--join:hover {
+  background-color: #383a3c;
 }

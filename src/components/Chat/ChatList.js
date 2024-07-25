@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import NewChat from "./NewChat";
 import Modal from "react-modal";
 import Cookies from "js-cookie";
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 
 Modal.setAppElement("#root");
 
@@ -15,6 +15,7 @@ const ChatList = ({ onSelectChatRoom }) => {
   const [nickname, setNickname] = useState("");
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState(false);
+  const [nicknameError, setNicknameError] = useState(false);
   const [showMyChatRooms, setShowMyChatRooms] = useState(false);
 
   //채팅방 가져오기
@@ -26,7 +27,9 @@ const ChatList = ({ onSelectChatRoom }) => {
     console.log("Decoded Token: ", decodedToken);
     console.log("User ID: ", userId);
 
-    const url = myRooms ? `/api/chat/rooms/my?userId=${userId}` : "/api/chat/rooms/group";
+    const url = myRooms
+      ? `/api/chat/rooms/my?userId=${userId}`
+      : "/api/chat/rooms/group";
 
     try {
       const response = await fetch(url, {
@@ -41,10 +44,12 @@ const ChatList = ({ onSelectChatRoom }) => {
         const data = await response.json();
         console.log("Fetched Chat Rooms: ", data);
 
-        // inactive 상태인 유저 필터링하기 
-        const filteredChatRooms = data.filter(chatRoom => {
+        // inactive 상태인 유저 필터링하기
+        const filteredChatRooms = data.filter((chatRoom) => {
           if (showMyChatRooms) {
-            const participant = chatRoom.participants.find(p => p.userId == userId);
+            const participant = chatRoom.participants.find(
+              (p) => p.userId == userId
+            );
             return participant && participant.isActive;
           }
           return true;
@@ -97,17 +102,13 @@ const ChatList = ({ onSelectChatRoom }) => {
         setNickname(""); // 닉네임 리셋하기
         setPassword(""); // 비번 리셋하기
         setPasswordError(false); // 에러메세지 리셋하기
+        setNicknameError(false); // 에러메세지 리셋하기
         if (data.isActive) {
           setSelectedChatRoom(chatRoom);
           onSelectChatRoom(chatRoom); // 채팅방 선택에 따라 바뀜
         } else {
-          if (chatRoom.secret) {
-            setSelectedChatRoom(chatRoom);
-            setShowJoinModal(true);
-          } else {
-            setSelectedChatRoom(chatRoom);
-            onSelectChatRoom(chatRoom);
-          }
+          setSelectedChatRoom(chatRoom);
+          setShowJoinModal(true);
         }
       } else {
         console.error("채팅방에 참가한 유저인지 확인하지 못하였습니다.");
@@ -119,11 +120,25 @@ const ChatList = ({ onSelectChatRoom }) => {
 
   // 채팅 참여하기
   const handleJoinChat = async () => {
+    let hasError = false;
+
     if (selectedChatRoom.secret && !password) {
       setPasswordError(true);
+      hasError = true;
+    } else {
+      setPasswordError(false);
+    }
+
+    if (!nickname) {
+      setNicknameError(true);
+      hasError = true;
+    } else {
+      setNicknameError(false);
+    }
+
+    if (hasError) {
       return;
     }
-    setPasswordError(false);
 
     const token = Cookies.get("accessToken");
 
@@ -142,8 +157,10 @@ const ChatList = ({ onSelectChatRoom }) => {
 
       if (response.ok) {
         setShowJoinModal(false);
+        // 선택된 채팅방으로 설정하고 onSelectChatRoom 콜백 부르기
         onSelectChatRoom(selectedChatRoom);
-        // 채팅방 다시 불러와서 리스트 업데이트하기 
+        setSelectedChatRoom(selectedChatRoom);
+        // 채팅방 다시 불러와서 리스트 업데이트하기
         fetchChatRooms(showMyChatRooms);
       } else {
         console.error("채팅방 참여에 실패하였습니다.");
@@ -168,11 +185,21 @@ const ChatList = ({ onSelectChatRoom }) => {
           >
             {showMyChatRooms ? "전체 채팅방" : "나의 채팅방"}
           </button>
+          <div className="chat-list__group">
+            <button className="chat-list__button" onClick={openModal}>
+              채팅방 만들기
+            </button>
+          </div>
         </div>
+        <div className="chat-list__line"></div>
         <ul className="chat-list__u-list">
           {chatRooms.map((chatRoom) => (
             <li
-              className="chat-list__list"
+              className={`chat-list__list ${
+                chatRoom.chatRoomId === selectedChatRoom?.chatRoomId
+                  ? "selected"
+                  : ""
+              }`}
               onClick={() => handleChatRoomClick(chatRoom)}
               key={chatRoom.chatRoomId}
             >
@@ -188,11 +215,6 @@ const ChatList = ({ onSelectChatRoom }) => {
             </li>
           ))}
         </ul>
-        <div className="chat-list__group">
-          <button className="chat-list__button" onClick={openModal}>
-            채팅 시작하기
-          </button>
-        </div>
         <article className="chat-list__holder">
           <NewChat
             isOpen={isOpen}
@@ -209,18 +231,22 @@ const ChatList = ({ onSelectChatRoom }) => {
           setNickname("");
           setPassword("");
           setPasswordError(false);
+          setNicknameError(false);
         }}
         className="chat-list__modal"
       >
-        <h2 className="chat-list__title">채팅에 참여하시겠습니까?</h2>
+        <h3 className="chat-list__title">채팅방에 참여하시겠습니까?</h3>
         {selectedChatRoom && (
           <>
             {selectedChatRoom.secret && (
-              <div className="chat-list__wrapper">
-                <p className="chat-list__subtitle">비밀번호:</p>
+              <div className="chat-list__wrapper chat-list__wrapper--pw">
+                <p className="chat-list__subtitle">
+                  **이 채팅방은 비밀방입니다.**
+                </p>
                 <input
                   className="chat-list__input"
                   type="password"
+                  placeholder="비밀번호를 입력해주세요."
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
@@ -230,15 +256,21 @@ const ChatList = ({ onSelectChatRoom }) => {
               </div>
             )}
             <div className="chat-list__wrapper">
-              <p className="chat-list__subtitle">닉네임:</p>
               <input
                 className="chat-list__input"
                 type="text"
+                placeholder="닉네임을 입력해주세요."
                 value={nickname}
                 onChange={(e) => setNickname(e.target.value)}
               />
+              {nicknameError && (
+                <p className="error-message">닉네임을 입력하세요.</p>
+              )}
             </div>
-            <button className="chat-list__button" onClick={handleJoinChat}>
+            <button
+              className="chat-list__button--join"
+              onClick={handleJoinChat}
+            >
               참여하기
             </button>
           </>

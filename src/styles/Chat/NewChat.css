@@ -1,14 +1,67 @@
 .new-chat__modal {
-  background-color: #fff;
-  border-radius: 0.5rem;
-  padding: 2rem;
-  width: 50%;
-  height: 50%;
-  transform: translate(50%, 50%);
-  overflow-y: auto;
-  max-height: 50rem;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 1.875rem;
+  border: 0.063rem solid #ccc;
+  z-index: 1000;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.2);
 }
 
 .error-message {
   color: #ee6055;
+  font-size: 0.75rem;
+}
+
+.new-chat__button{
+  border: none;
+  border-radius: 0.25rem;
+  padding: 0.5rem 1rem;
+  background-color: black;
+  color: #ffff;
+  font-weight: 600;
+  font-size: 0.85rem;
+  margin: 0;
+  margin-right: 1rem;
+  cursor: pointer;
+}
+
+.new-chat__button:hover {
+  background-color: #383a3c;
+}
+
+.new-chat__holder{
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.new-chat__input{
+  border: none;
+  border-bottom: 0.1rem solid black;
+  padding-bottom: 0.25rem;
+  width: 12rem;
+  height: 1.25rem;
+}
+
+.new-chat__input--pw {
+  margin-bottom: 2rem;
+}
+
+.new-chat__subtitle{
+  font-size: 0.9rem;
+  color: #525a5f;
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.new-chat__hashtag{
+  font-size: 0.75rem;
+  color: #6c757d;
+  margin-top: 0.5rem;
+}
+
+.new-chat__group{
+  margin-bottom: 1.5rem;
 }

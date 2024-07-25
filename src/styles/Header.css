@@ -4,16 +4,15 @@
     justify-content: space-between;
     padding: 30px 40px;
   }
-
   
   .logo {
     font-size: 30px;
     font-weight: 600;
     width: 80px;
   }
-  
-  .logo span {
-    color: tomato;
+
+  .logo-span {
+    color: #ff7900;
   }
   
   nav a {

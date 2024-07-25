@@ -1,8 +1,5 @@
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-// import { useState, useEffect } from "react";
-// import { jwtDecode } from "jwt-decode";
-// import Cookies from "js-cookie";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 import Chat from "./pages/Chat";

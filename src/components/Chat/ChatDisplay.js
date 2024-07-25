@@ -1,9 +1,9 @@
-import "../../styles/Chat/ChatDisplay.css";
 import React, { useState, useEffect, useRef } from "react";
 import SockJS from "sockjs-client";
 import { Stomp } from "@stomp/stompjs";
 import Cookies from "js-cookie";
 import debounce from "lodash.debounce";
+import "../../styles/Chat/ChatDisplay.css";
 
 const ChatDisplay = ({ chatRoom, onLeave }) => {
   const [nickname, setNickname] = useState("");
@@ -15,6 +15,7 @@ const ChatDisplay = ({ chatRoom, onLeave }) => {
   const [showJoinModal, setShowJoinModal] = useState(false);
   const [isJoined, setIsJoined] = useState(false);
   const stompClient = useRef(null);
+  const chatContainerRef = useRef(null);
 
   const fetchUserInfo = async (token, chatRoomId) => {
     try {
@@ -34,6 +35,8 @@ const ChatDisplay = ({ chatRoom, onLeave }) => {
     }
   };
 
+
+
   const fetchMessages = async (token, chatRoomId) => {
     try {
       const response = await fetch(
@@ -47,15 +50,17 @@ const ChatDisplay = ({ chatRoom, onLeave }) => {
       const data = await response.json();
       const normalizedMessages = data.map((msg) => ({
         ...msg,
+        chatId: msg.chatId,
         content: msg.message,
-        sender: msg.nickname, 
-        type: msg.type || "GROUP_CHAT"
+        sender: msg.nickname,
+        type: msg.type || "GROUP_CHAT",
       }));
       setMessages(normalizedMessages);
     } catch (error) {
       console.error("메세지를 불러오지 못했습니다.:", error);
     }
   };
+
 
   const connect = () => {
     const token = Cookies.get("accessToken");
@@ -70,6 +75,11 @@ const ChatDisplay = ({ chatRoom, onLeave }) => {
           `/topic/groupChatRoom/${chatRoom.chatRoomId}`,
           (message) => {
             const newMessage = JSON.parse(message.body);
+
+            if (!newMessage.chatId) {
+              console.error("새로운 메세지에 chatId가 없습니다.");
+            }
+
             setMessages((prevMessages) => [...prevMessages, newMessage]);
           }
         );
@@ -138,7 +148,14 @@ const ChatDisplay = ({ chatRoom, onLeave }) => {
     };
   }, [chatRoom, nickname, userId, isJoined]);
 
-  const sendMessage = () => {
+
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  }, [messages]); // 최근 메세지로 스크롤됨
+
+  const sendMessage = async () => {
     if (stompClient.current && message.trim() !== "") {
       const chatMessage = {
         sender: nickname,
@@ -147,12 +164,35 @@ const ChatDisplay = ({ chatRoom, onLeave }) => {
         userId: userId,
         chatRoomId: chatRoom.chatRoomId,
       };
-      stompClient.current.send(
-        `/app/chat.sendMessage/${chatRoom.chatRoomId}`,
-        {},
-        JSON.stringify(chatMessage)
-      );
-      setMessage("");
+
+      try {
+        const response = await fetch("/api/chat/messages", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${Cookies.get("accessToken")}`,
+          },
+          body: JSON.stringify(chatMessage),
+        });
+
+        const textResponse = await response.text();
+
+        if (!response.ok) {
+          throw new Error(`서버 에러: ${response.statusText}`);
+        }
+
+        if (!textResponse) {
+          throw new Error('빈 상태로 전달왔습니다.');
+        }
+
+        const newMessage = JSON.parse(textResponse);
+        console.log("서버로부터 새로운 메세지:", newMessage); 
+
+        setMessages((prevMessages) => [...prevMessages, newMessage]);
+        setMessage("");
+      } catch (error) {
+        console.error("메세지 보내기 실패:", error);
+      }
     } else {
       console.error("STOMP client 연결에 실패하였습니다.");
     }
@@ -176,6 +216,7 @@ const ChatDisplay = ({ chatRoom, onLeave }) => {
         }
       );
 
+      console.log(response);
       if (response.ok) {
         setMessages((prevMessages) =>
           prevMessages.filter((msg) => msg.chatId !== selectedMessage)
@@ -234,86 +275,119 @@ const ChatDisplay = ({ chatRoom, onLeave }) => {
 
   return (
     <div className="chat-display">
-      <div className="chat-display__msg">
-        {messages.map((msg, index) => (
-          <div
-            key={index}
-            onClick={() => {
-              if (msg.userId === userId) {
-                setSelectedMessage(msg.chatId);
-                setShowDeleteModal(true);
-              }
-            }}
-          >
-            <div
-              className={`chat-display__content ${
-                msg.type === "JOIN" || msg.type === "LEAVE"
-                  ? "system-message"
-                  : msg.userId === userId
-                  ? "my-message"
-                  : "other-message"
-              }`}
-            >
-              {console.log(
-                `Message Type: ${msg.type}, Content: ${msg.content}`
-              )}
-              {msg.type === "JOIN" || msg.type === "LEAVE" ? (
-                <div>{msg.content}</div>
-              ) : (
-                <>
-                  <strong>{msg.sender}</strong>: {msg.content}
-                </>
-              )}
-            </div>
+      {isJoined ? (
+        <>
+          <div className="chat-display__msg" ref={chatContainerRef}>
+            {messages.map((msg, index) => (
+              <div
+                key={index}
+                onClick={() => {
+                  if (msg.userId === userId) {
+                    console.log("Selected message chatId:", msg.chatId); 
+                    setSelectedMessage(msg.chatId);
+                    setShowDeleteModal(true);
+                  }
+                }}
+              >
+                <div
+                  className={`chat-display__content ${
+                    msg.type === "JOIN" || msg.type === "LEAVE"
+                      ? "system-message"
+                      : msg.userId === userId
+                      ? "my-message"
+                      : "other-message"
+                  }`}
+                >
+                  {console.log(
+                    `Message Type: ${msg.type}, Content: ${msg.content}`
+                  )}
+                  {msg.type === "JOIN" || msg.type === "LEAVE" ? (
+                    <div>{msg.content}</div>
+                  ) : (
+                    <div className="chat-display__container">
+                      <strong className="chat-display__nickname">
+                        {msg.nickname}
+                      </strong>
+                      <div className="chat-display__message">{msg.message}</div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-      <div className="chat-display__holder">
-        <div className="chat-display__wrapper">
-          <input
-            className="chat-display__input"
-            type="text"
-            placeholder="메시지 입력"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            onKeyDown={handleKeyDown}
-          />
+
+          <div className="chat-display__holder">
+            <div className="chat-display__wrapper">
+              <input
+                className="chat-display__input"
+                type="text"
+                placeholder="메시지 입력"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                onKeyDown={handleKeyDown}
+              />
+            </div>
+            <button className="chat-display__button" onClick={sendMessage}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="32"
+                height="32"
+                viewBox="0 0 32 32"
+                className="icon-2xl"
+              >
+                <circle cx="16" cy="16" r="16" fill="black" />
+                <path
+                  fill="white"
+                  fillRule="evenodd"
+                  d="M15.192 8.906a1.143 1.143 0 0 1 1.616 0l5.143 5.143a1.143 1.143 0 0 1-1.616 1.616l-3.192-3.192v9.813a1.143 1.143 0 0 1-2.286 0v-9.813l-3.192 3.192a1.143 1.143 0 1 1-1.616-1.616z"
+                  clipRule="evenodd"
+                ></path>
+              </svg>
+            </button>
+          </div>
+        </>
+      ) : (
+        <div className="chat-display__not-joined">
+          채팅방에 참여하시겠습니까?
         </div>
-        <button className="chat-display__button" onClick={sendMessage}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="32"
-            height="32"
-            viewBox="0 0 32 32"
-            className="icon-2xl"
-          >
-            <circle cx="16" cy="16" r="16" fill="black" />
-            <path
-              fill="white"
-              fillRule="evenodd"
-              d="M15.192 8.906a1.143 1.143 0 0 1 1.616 0l5.143 5.143a1.143 1.143 0 0 1-1.616 1.616l-3.192-3.192v9.813a1.143 1.143 0 0 1-2.286 0v-9.813l-3.192 3.192a1.143 1.143 0 1 1-1.616-1.616z"
-              clipRule="evenodd"
-            ></path>
-          </svg>
-        </button>
-      </div>
+      )}
 
       {showDeleteModal && (
-        <div className="modal">
-          <div className="modal-content">
-            <p>삭제하시겠습니까?</p>
-            <button onClick={handleDeleteMessage}>예</button>
-            <button onClick={() => setShowDeleteModal(false)}>아니요</button>
+        <div className="chat-display__modal">
+          <div className="chat-display__modal-content">
+            <h3 className="chat-display__title">삭제하시겠습니까?</h3>
+            <button
+              className="chat-display__modal--button"
+              onClick={handleDeleteMessage}
+            >
+              예
+            </button>
+            <button
+              className="chat-display__modal--button"
+              onClick={() => setShowDeleteModal(false)}
+            >
+              아니요
+            </button>
           </div>
         </div>
       )}
 
       {showJoinModal && (
-        <div className="modal">
-          <div className="modal-content">
-            <p>채팅방에 참여하시겠습니까?</p>
-            <button onClick={confirmJoinChatRoom}>예</button>
-            <button onClick={() => setShowJoinModal(false)}>아니요</button>
+        <div className="chat-display__modal">
+          <div className="chat-display__modal-content">
+            <h3 className="chat-display__title">채팅방에 참여하시겠습니까?</h3>
+            <button
+              className="chat-display__modal--button"
+              onClick={confirmJoinChatRoom}
+            >
+              예
+            </button>
+            <button
+              className="chat-display__modal--button"
+              onClick={() => setShowJoinModal(false)}
+            >
+              아니요
+            </button>
           </div>
         </div>
       )}
@@ -322,3 +396,5 @@ const ChatDisplay = ({ chatRoom, onLeave }) => {
 };
 
 export default ChatDisplay;
+
+

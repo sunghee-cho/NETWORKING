@@ -10,10 +10,17 @@ import com.example.networking.messaging.service.ChatService;
 
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 
 @RestController
 @RequestMapping("/api/chat/messages")
 public class ChatMessageController {
+
+    private static final Logger logger = LoggerFactory.getLogger(ChatMessageController.class);
+
 
     @Autowired
     private ChatService chatService;
@@ -21,8 +28,10 @@ public class ChatMessageController {
     // 새로운 메세지 저장하기 
     @PostMapping
     public ResponseEntity<Chat> createChatMessage(@RequestBody ChatMessage chatMessage) {
-        chatService.saveMessage(chatMessage);
-        return ResponseEntity.ok().build();
+        logger.info("Received message: {}", chatMessage);
+        Chat savedChat = chatService.saveMessage(chatMessage);
+        logger.info("Returning saved chat: {}", savedChat);
+        return ResponseEntity.ok(savedChat);
     }
 
     // 채팅방 id로 채팅메세지 찾기
@@ -47,10 +56,10 @@ public class ChatMessageController {
                           .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // 메세지 삭제하기
-    @PatchMapping("/{chatId}/soft-delete")
-    public ResponseEntity<Void> softDeleteMessage(@PathVariable Long chatId) {
-        chatService.softDeleteMessage(chatId);
-        return ResponseEntity.noContent().build();
-    }
+        // 메세지 삭제하기
+        @PatchMapping("/{chatId}/soft-delete")
+        public ResponseEntity<Void> softDeleteMessage(@PathVariable Long chatId) {
+            chatService.softDeleteMessage(chatId);
+            return ResponseEntity.noContent().build();
+        }
 }

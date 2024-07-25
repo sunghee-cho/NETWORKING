@@ -1,6 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Hi+Melody&family=Sunflower:wght@300&display=swap');
+
+
+.chat-display__msg {
+  max-height: 37rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  font-family: "Hi Melody", sans-serif;
+  font-size: 1.1rem;
+
+}
+
+.chat-display__nickname{
+  font-size: 0.65rem;
+  color: #495057;
+}
+
 .chat-display__wrapper {
-    display: flex;
-    gap: 2rem;
+  display: flex;
+  gap: 2rem;
 }
 
 .chat-display__holder {
@@ -16,56 +34,73 @@
 }
 
 .chat-display__input {
-    margin: 1rem;
-    padding: 0.5rem 1rem;
-    border: 0;
-    width: 100%;
+  margin: 1rem;
+  margin-left: 0;
+  padding: 0.5rem 1rem;
+  border: 0.063rem solid #ccc;
+  border-radius: 0.25rem;
+  width: 100%;
 }
 
-.modal {
+.chat-display__content.system-message {
+  text-align: center;
+  font-size: 0.7em;
+  color: #495057;
+  margin-bottom: 0.75rem;
+}
+
+.chat-display__content.my-message,
+.chat-display__content.other-message {
+  display: inline-block;
+  max-width: 60%;
+  word-wrap: break-word;
+  padding: 10px;
+  border-radius: 15px;
+  margin: 5px 0;
+}
+
+.chat-display__content.my-message {
+  background-color: #e0e0e0;
+  text-align: right;
+  margin-left: auto;
+  float: right;
+}
+
+.chat-display__content.other-message {
+  background-color: #e0e0e0;
+  text-align: left;
+  margin-right: auto;
+}
+
+.chat-display__modal {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: white;
-  padding: 20px;
-  border: 1px solid #ccc;
+  padding: 1.875rem;
+  border: 0.063rem solid #ccc;
   z-index: 1000;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.2);
 }
 
-.modal-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.chat-display__title {
+  color: #495057;
 }
 
-.modal-content p {
-  margin-bottom: 20px;
-}
-
-.modal-content button {
-  margin: 5px;
-  padding: 10px 20px;
+.chat-display__modal--button {
+  border: none;
+  border-radius: 0.25rem;
+  padding: 0.5rem 1rem;
+  background-color: black;
+  color: #ffff;
+  font-weight: 600;
+  font-size: 0.85rem;
+  margin-right: 1rem;
   cursor: pointer;
 }
 
-.chat-display__content.system-message {
-  text-align: center;
-  font-size: 0.9em;
-  color: gray;
-}
+.chat-display__modal--button:hover {
+  background-color: #383a3c;
+} 
 
-.chat-display__content.my-message {
-  text-align: right;
-  padding: 5px;
-  border-radius: 10px;
-  margin: 5px 0;
-}
-
-.chat-display__content.other-message {
-  text-align: left;
-  padding: 5px;
-  border-radius: 10px;
-  margin: 5px 0;
-}

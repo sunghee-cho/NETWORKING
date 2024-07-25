@@ -14,6 +14,6 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
     List<ChatRoom> findByChatType(MessageType chatType); // 채팅방 타입으로 채팅방 찾기
 
     @Query("SELECT cr FROM ChatRoom cr JOIN cr.participants p WHERE p.userId = :userId")
-    List<ChatRoom> findByUserId(@Param("userId") Integer userId);
+    List<ChatRoom> findByUserId(@Param("userId") Integer userId); // 유저 id로 찾기 
 
 }
