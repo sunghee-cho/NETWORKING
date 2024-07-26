@@ -13,6 +13,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.example.networking.security.custom.CustomUserDetailService;
 import com.example.networking.security.jwt.filter.JwtAuthenticationFilter;
@@ -61,7 +64,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests(authorizeRequests -> 
             authorizeRequests
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                .requestMatchers("/", "/login", "/users/**").permitAll()
+                .requestMatchers("/", "/login", "/users/**", "/api/**").permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/chat/**", "/api/chat/**","/api/chat/rooms/**", "/api/chat/messages/**").authenticated() 
                 .anyRequest().authenticated()
@@ -88,4 +91,35 @@ public class SecurityConfig {
         this.authenticationManager = authenticationConfiguration.getAuthenticationManager();
         return authenticationManager;
     }
+
+    //     @Bean
+    // public CorsFilter corsFilter() {
+    //     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    //     CorsConfiguration config = new CorsConfiguration();
+    //     config.setAllowCredentials(true);
+    //     config.addAllowedOrigin("http://localhost:3000");
+    //     config.addAllowedHeader("*");
+    //     config.addAllowedMethod("*");
+    //     source.registerCorsConfiguration("/**", config);
+    //     return new CorsFilter(source);
+    // }
+
+    // @Bean
+    // public WebMvcConfigurer corsConfigurer() {
+    //     return new WebMvcConfigurer() {
+    //         @Override
+    //         public void addCorsMappings(CorsRegistry registry) {
+    //             registry.addMapping("/api/**")
+    //                     .allowedOrigins("http://localhost:3000")
+    //                     .allowedMethods("GET", "POST", "PUT", "DELETE")
+    //                     .allowedHeaders("*")
+    //                     .allowCredentials(true);
+                
+    //             registry.addMapping("/**")
+    //                     .allowedOrigins("http://localhost:3000")
+    //                     .allowedMethods("*")
+    //                     .allowedHeaders("*")
+    //                     .allowCredentials(true);
+    //         }
+    //     };
 }

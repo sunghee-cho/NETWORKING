@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "ChatRooms")
+@Table(name = "chat_rooms") 
 public class ChatRoom {
 
     @Id

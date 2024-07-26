@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { fetchNotifications } from "../../apis/notificationApi";
 import { LoginContext } from "../../contexts/LoginContextProvider";
-import "../../styles/Notification/notification.css";
+import "../../styles/notification/notification.css";
 
 const Contents = () => {
   const [activeMenu, setActiveMenu] = useState(null);
@@ -11,7 +11,7 @@ const Contents = () => {
 
   useEffect(() => {
     const loadNotifications = async () => {
-      if (userInfo) {
+      if (userInfo && userInfo.userId) {
         try {
           const data = await fetchNotifications(userInfo.userId);
           setNotifications(data);
@@ -41,6 +41,13 @@ const Contents = () => {
     };
   }, []);
 
+  const handleDeleteNotification = (index) => {
+    setNotifications((prevNotifications) =>
+      prevNotifications.filter((_, i) => i !== index)
+    );
+    setActiveMenu(null);
+  };
+
   return (
     <div className="notifications">
       <div className="notifications__tabs">
@@ -55,13 +62,18 @@ const Contents = () => {
             key={index}
             style={{ position: "relative" }}
           >
-            <p>{notification.notificationContent}</p>
+            <p>
+              <span className="liker-name">{notification.liker}</span>님이
+              당신의 게시물을 좋아요를 눌렀습니다.
+            </p>
             <button className="more-options" onClick={() => toggleMenu(index)}>
               <i className="fa-solid fa-ellipsis"></i>
             </button>
             {activeMenu === index && (
               <div className="options-menu" ref={menuRef}>
-                <button>알림 삭제</button>
+                <button onClick={() => handleDeleteNotification(index)}>
+                  알림 삭제
+                </button>
                 <button>이 알림 종류 받지 않기</button>
               </div>
             )}

@@ -1,8 +1,7 @@
-// src/pages/Joblist.js
 import React from "react";
 import Profile from "../components/Job/Profile";
 import Banner from "../components/Job/Banner";
-import Joblist from "../components/Job/Job";
+import Job from "../components/Job/Job";
 import "../styles/Job/Joblist.css";
 
 const JoblistPage = () => {
@@ -14,8 +13,11 @@ const JoblistPage = () => {
         </div>
         <div className="rightColumn">
           <Banner />
-          <Joblist />
+          <Job />
         </div>
+      </div>
+      <div className="powered-by">
+        Powered by <a href="http://www.saramin.co.kr" target="_blank" rel="noopener noreferrer">취업 사람인</a>
       </div>
     </div>
   );
