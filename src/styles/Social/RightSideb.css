@@ -1,72 +1,71 @@
-
 .rightsidebar {
-    padding: 16px;
-    background-color: #f9f9f9;
+  padding: 16px;
+  background-color: #f9f9f9;
 }
 
 .links {
-    margin-bottom: 16px;
+  margin-bottom: 16px;
 }
 
 .section-title {
-    font-size: 26px;
-    font-weight: bold;
-    margin-bottom: 16px;
-    text-align: center;
+  font-size: 26px;
+  font-weight: bold;
+  margin-bottom: 16px;
+  text-align: center;
 }
 
 #joblists-social {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .job-item-social {
-    display: flex;
-    align-items: center;
-    padding: 16px;
-    text-decoration: none;
-    color: inherit;
-    background-color: white;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  text-decoration: none;
+  color: inherit;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  box-sizing: border-box;
 }
 .job-item-social:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transform: translateY(-5px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .job-details-social {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 
 .job-title-social {
-    font-weight: bold;
-    font-size: 16px;
-    margin-bottom: 8px;
+  font-weight: bold;
+  font-size: 16px;
+  margin-bottom: 8px;
 }
 
 .company-name-social {
-    color: #555;
-    font-size: 14px;
+  color: #555;
+  font-size: 14px;
 }
 .banner {
-    text-align: center;
-    margin: 20px 0 10px;
+  text-align: center;
+  margin: 20px 0 10px;
 }
 
 .banner-image {
-    max-width: 100%;
-    height: auto;
-    border-radius: 8px;
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
 }
 
 .footer {
-    margin-top: 10px;
-    text-align: center;
+  margin-top: 10px;
+  text-align: center;
 }

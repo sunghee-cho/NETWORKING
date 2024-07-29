@@ -32,10 +32,10 @@ public class ChatService {
         chat.setIsDeleted(false); 
         chat.setType(chatMessage.getType());
 
-        logger.info("Saving message: " + chat);
+        logger.info("메세지 저장중: " + chat);
 
         Chat savedChat = chatRepository.save(chat);
-        logger.info("Message saved successfully: " + savedChat);
+        logger.info("메세지가 저장되었습니다: " + savedChat);
 
         return savedChat;
     }

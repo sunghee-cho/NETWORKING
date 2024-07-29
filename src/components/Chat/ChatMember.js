@@ -1,7 +1,7 @@
 import "../../styles/Chat/ChatMember.css";
 import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
-import profilePic from "../../assets/images/고양이 프로필.png";
+import profilePic from "../../assets/images/고양이 프로필.png";
 
 const ChatMember = ({ chatRoom, onLeave }) => {
   const [members, setMembers] = useState([]);

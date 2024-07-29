@@ -13,6 +13,7 @@
   font-size: 0.9rem;
   margin: 0 -.25rem;
   transition: color .3s ease-in-out, box-shadow .3s ease-in-out;
+  background-color: #ffff;
 }
 
 .chat-list__button:hover {

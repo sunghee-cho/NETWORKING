@@ -16,7 +16,6 @@ public class SaraminApiController {
     @Autowired
     private SaraminApiService saraminApiService;
 
-    @SuppressWarnings("deprecation")
     @GetMapping(value = "/data", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<String> getExternalData() {
         String data = saraminApiService.getExternalData();

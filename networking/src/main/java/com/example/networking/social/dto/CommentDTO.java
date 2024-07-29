@@ -9,8 +9,8 @@ import lombok.Setter;
 @Getter
 public class CommentDTO {
     private Long id;
-    private Long postId;  // 새로 추가
-    private String userId;  // Integer로 변경
+    private Long postId;
+    private String userId;
     private String contentComment;
     private LocalDateTime createdAt;
 

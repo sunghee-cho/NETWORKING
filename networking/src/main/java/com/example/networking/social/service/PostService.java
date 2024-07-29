@@ -6,9 +6,9 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.networking.dto.Users;
 import com.example.networking.social.dto.PostDTO;
 import com.example.networking.social.entity.Post;
+import com.example.networking.social.entity.User;
 import com.example.networking.social.repository.PostRepository;
 import com.example.networking.social.repository.UserRepository;
 
@@ -40,12 +40,7 @@ public class PostService {
     private PostDTO convertToDto(Post post) {
         PostDTO postDTO = new PostDTO();
         postDTO.setId(post.getId());
-        if (post.getUser() != null) {
-            postDTO.setUserId(post.getUser().getUserId());
-        } else {
-            // Handle the null user case, e.g., log a warning or throw an exception
-            throw new RuntimeException("Post has no associated user: " + post.getId());
-        }
+        postDTO.setUserId(post.getUser().getUserId()); // userId를 String으로 설정
         postDTO.setContentPost(post.getContentPost());
         postDTO.setImagePost(post.getImagePost());
         postDTO.setLikesCount(post.getLikesCount());
@@ -56,7 +51,7 @@ public class PostService {
     private Post convertToEntity(PostDTO postDTO) {
         Post post = new Post();
         post.setId(postDTO.getId());
-        Users user = userRepository.findByUserId(postDTO.getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findByUserId(postDTO.getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
         post.setUser(user);
         post.setContentPost(postDTO.getContentPost());
         post.setImagePost(postDTO.getImagePost());

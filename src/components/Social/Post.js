@@ -151,7 +151,7 @@ const Post = () => {
       const token = Cookies.get("accessToken");
 
       try {
-        await axios.post("/api/comments", newComment, {
+        await axios.post("http://localhost:8080/api/comments", newComment, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

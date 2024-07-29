@@ -1,7 +1,6 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 
-
 export const sendLikeNotification = async (likeNotificationRequest, token) => {
   console.log("Token in sendLikeNotification:", token);
   const response = await axios.post(

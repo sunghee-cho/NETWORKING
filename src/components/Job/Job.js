@@ -152,7 +152,7 @@ const Job = () => {
     const fetchJobs = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8080/data`
+          `${process.env.REACT_APP_API_URL}/data`
         );
         console.log("API Response:", response.data);
 

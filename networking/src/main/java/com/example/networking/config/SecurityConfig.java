@@ -14,6 +14,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -27,8 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Configuration
 @EnableWebSecurity
-// @preAuthorize, @postAuthorize, @Secured 활성화
-@EnableMethodSecurity(prePostEnabled = true, securedEnabled = true) 
+@EnableMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfig {
 
     @Autowired
@@ -37,53 +38,37 @@ public class SecurityConfig {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
-    // 시큐리티 설정
-    @SuppressWarnings("removal")
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain mainSecurityFilterChain(HttpSecurity http) throws Exception {
         log.info("시큐리티 설정...");
 
-        http.cors().and().csrf().disable(); // cors 에러가 떠서 추가함 **새로 업데이트**
-
-        // 폼 기반 로그인 비활성화
-        http.formLogin(login -> login.disable());
-
-        // HTTP 기본 인증 비활성화
-        http.httpBasic(basic -> basic.disable());
-
-        // CSRF(Cross-Site Request Forgery) 공격 방어 기능 비활성화
-        http.csrf(csrf -> csrf.disable());
-
-        // 필터 설정 ✅
-        http.addFilterAt(new JwtAuthenticationFilter(authenticationManager, jwtTokenProvider),
-                        UsernamePasswordAuthenticationFilter.class)
+        http.formLogin(login -> login.disable())
+            .httpBasic(basic -> basic.disable())
+            .csrf(csrf -> csrf.disable())
+            .cors().and()
+            .addFilterAt(new JwtAuthenticationFilter(authenticationManager, jwtTokenProvider),
+                    UsernamePasswordAuthenticationFilter.class)
             .addFilterBefore(new JwtRequestFilter(jwtTokenProvider),
-                            UsernamePasswordAuthenticationFilter.class);
+                    UsernamePasswordAuthenticationFilter.class)
+            .authorizeHttpRequests(authorizeRequests ->
+                authorizeRequests
+                    .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                    .requestMatchers("/", "/login", "/users/**", "/api/**").permitAll()
+                    .requestMatchers("/admin/**").hasRole("ADMIN")
+                    .requestMatchers("/chat/**", "/api/chat/**","/api/chat/rooms/**", "/api/chat/messages/**").authenticated() 
+                    .anyRequest().authenticated()
+            );
 
-        // 인가 설정 ✅
-        http.authorizeHttpRequests(authorizeRequests -> 
-            authorizeRequests
-                .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                .requestMatchers("/", "/login", "/users/**", "/api/**").permitAll()
-                .requestMatchers("/admin/**").hasRole("ADMIN")
-                .requestMatchers("/chat/**", "/api/chat/**","/api/chat/rooms/**", "/api/chat/messages/**").authenticated() 
-                .anyRequest().authenticated()
-                .and()
-        );
-
-        // 인증 방식 설정 ✅
         http.userDetailsService(customUserDetailService);
+
         return http.build();
     }
 
-    // PasswordEncoder 빈 등록
-    // 암호화 알고리즘 방식: Bcrypt
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();    
+        return new BCryptPasswordEncoder();
     }
 
-    // AuthenticationManager 빈 등록
     private AuthenticationManager authenticationManager;
 
     @Bean
@@ -92,34 +77,35 @@ public class SecurityConfig {
         return authenticationManager;
     }
 
-    //     @Bean
-    // public CorsFilter corsFilter() {
-    //     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    //     CorsConfiguration config = new CorsConfiguration();
-    //     config.setAllowCredentials(true);
-    //     config.addAllowedOrigin("http://localhost:3000");
-    //     config.addAllowedHeader("*");
-    //     config.addAllowedMethod("*");
-    //     source.registerCorsConfiguration("/**", config);
-    //     return new CorsFilter(source);
-    // }
+    @Bean
+    public CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.addAllowedOrigin("http://localhost:3000");
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("*");
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
+    }
 
-    // @Bean
-    // public WebMvcConfigurer corsConfigurer() {
-    //     return new WebMvcConfigurer() {
-    //         @Override
-    //         public void addCorsMappings(CorsRegistry registry) {
-    //             registry.addMapping("/api/**")
-    //                     .allowedOrigins("http://localhost:3000")
-    //                     .allowedMethods("GET", "POST", "PUT", "DELETE")
-    //                     .allowedHeaders("*")
-    //                     .allowCredentials(true);
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/api/**")
+                        .allowedOrigins("http://localhost:3000")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH")
+                        .allowedHeaders("*")
+                        .allowCredentials(true);
                 
-    //             registry.addMapping("/**")
-    //                     .allowedOrigins("http://localhost:3000")
-    //                     .allowedMethods("*")
-    //                     .allowedHeaders("*")
-    //                     .allowCredentials(true);
-    //         }
-    //     };
+                registry.addMapping("/**")
+                        .allowedOrigins("http://localhost:3000")
+                        .allowedMethods("*")
+                        .allowedHeaders("*")
+                        .allowCredentials(true);
+            }
+        };
+    }
 }

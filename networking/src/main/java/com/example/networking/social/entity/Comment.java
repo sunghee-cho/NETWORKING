@@ -2,10 +2,6 @@ package com.example.networking.social.entity;
 
 import java.time.LocalDateTime;
 
-import com.example.networking.dto.Users;
-
-
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,18 +20,14 @@ public class Comment {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "post_id", nullable = false)
+    @JoinColumn(name = "post_id")
     private Post post;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "no") // referencedColumnName = "no" 추가
-    private Users user;
+    @JoinColumn(name = "user_id", referencedColumnName = "no")     
+    private User user;
 
-    @Column(name = "content_comment", nullable = true, length = 255) // 새로 추가
     private String contentComment;
-
-    // 새로 추가
-    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
 }

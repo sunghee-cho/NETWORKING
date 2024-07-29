@@ -2,10 +2,6 @@ package com.example.networking.social.entity;
 
 import java.time.LocalDateTime;
 
-import com.example.networking.dto.Users;
-
-
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,14 +20,12 @@ public class Likes {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "post_id", nullable = false)
+    @JoinColumn(name = "post_id")
     private Post post;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private Users user;
+    @JoinColumn(name = "user_id", referencedColumnName = "no")     
+    private User user;
 
-    // 새로 추가
-    @Column(name = "created_at")
     private LocalDateTime createdAt;
 }

@@ -1,20 +1,29 @@
 package com.example.networking.controller;
 
+import java.util.HashMap;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import com.example.networking.messaging.service.ChatUserService;
+
 
 import com.example.networking.dto.CustomUser;
 import com.example.networking.dto.Users;
 import com.example.networking.service.UserService;
-import com.example.networking.messaging.service.ChatUserService;
 
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -31,6 +40,7 @@ public class UserController {
     
     @Autowired
     private UserService userService;
+
 
     @Autowired
     private ChatUserService chatUserService;
@@ -58,7 +68,8 @@ public class UserController {
         return new ResponseEntity<>("UNAUTHORIZED", HttpStatus.UNAUTHORIZED);
     }
 
-    /**
+
+      /**
      * 사용자 정보 및 닉네임 조회   -- 채팅시스템을 위해 새로 업데이트 --
      * @param customUser
      * @return
@@ -91,6 +102,7 @@ public class UserController {
         // 인증 되지 않음
         return new ResponseEntity<>("UNAUTHORIZED", HttpStatus.UNAUTHORIZED);
     }
+
 
 
     /**

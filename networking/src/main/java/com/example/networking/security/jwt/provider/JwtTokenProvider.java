@@ -232,10 +232,8 @@ public class JwtTokenProvider {
     private SecretKey getShaKey() {
         return Keys.hmacShaKeyFor(getSigningKey());
     }
-
     // Method to return the secret key as a string
     public String getSigningKeyAsString() {  // 새로 업데이트
        return jwtProps.getSecretKey();
     }
-    
 }

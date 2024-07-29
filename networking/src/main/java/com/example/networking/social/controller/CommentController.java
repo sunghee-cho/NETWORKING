@@ -23,12 +23,12 @@ public class CommentController {
     private CommentService commentService;
 
     @GetMapping
-    public List<CommentDTO> getAllComments() {
+    public List<Comment> getAllComments() {
         return commentService.getAllComments();
     }
 
     @PostMapping
-    public CommentDTO createComment(@RequestBody CommentDTO commentDTO) {
+    public Comment createComment(@RequestBody CommentDTO commentDTO) {
         return commentService.createComment(commentDTO);
     }
 

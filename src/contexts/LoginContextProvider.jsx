@@ -27,7 +27,7 @@ const LoginContextProvider = ({ children }) => {
     */
    /* -----------------------[State]-------------------------- */
     // 로그인 여부
-    const [isLogin, setIsLogin] = useState(false);
+    const [isLogin, setLogin] = useState(false);
 
     // 유저 정보
     const [userInfo, setUserInfo] = useState(null)
@@ -190,7 +190,7 @@ const LoginContextProvider = ({ children }) => {
         api.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
 
         // 👩‍💼🔐 로그인 여부 : true
-        setIsLogin(true)
+        setLogin(true)
         
         // 👩‍💼✅ 유저정보 세팅
         const updatedUserInfo = {no, userId, roleList}
@@ -215,7 +215,7 @@ const LoginContextProvider = ({ children }) => {
         Cookies.remove("accessToken")
 
         // 🔐❌ 로그인 여부 : false
-        setIsLogin(false)
+        setLogin(false)
 
         // 👩‍💼❌ 유저 정보 초기화
         setUserInfo(null)
