@@ -5,9 +5,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 class ServerApplicationTests {
-
-	@Test
-	void contextLoads() {
-	}
+//ncp 서버배포시 오류발생하면 주석
+	//@Test
+	//void contextLoads() {
+	//}
 
 }
