@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { fetchNotifications } from "../../apis/notificationApi";
 import { LoginContext } from "../../contexts/LoginContextProvider";
-import "../../styles/notification/notification.css";
+import "../../styles/Notification/notification.css";
 
 const Contents = () => {
   const [activeMenu, setActiveMenu] = useState(null);

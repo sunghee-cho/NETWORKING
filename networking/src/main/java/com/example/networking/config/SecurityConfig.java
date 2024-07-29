@@ -53,7 +53,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(authorizeRequests ->
                 authorizeRequests
                     .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                    .requestMatchers("/", "/login", "/users/**", "/api/**").permitAll()
+                    .requestMatchers("/", "/login", "/users/**", "/api/**","/static/**","/index.html").permitAll()
                     .requestMatchers("/admin/**").hasRole("ADMIN")
                     .requestMatchers("/chat/**", "/api/chat/**","/api/chat/rooms/**", "/api/chat/messages/**").authenticated() 
                     .anyRequest().authenticated()
